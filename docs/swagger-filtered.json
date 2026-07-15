@@ -1014,9 +1014,6 @@
         "runner_image_pull_secret_id": {
           "type": "string"
         },
-        "settings": {
-          "$ref": "#/definitions/commons.RunnerImageSettings"
-        },
         "stack_id": {
           "description": "StackID is the infrastructure stack (kind + region, e.g. an EC2 stack)\nthe image belongs to. Required for byoc_ami; must be omitted for\ncontainer images.",
           "type": "string"
@@ -1405,7 +1402,7 @@
       "type": "object",
       "properties": {
         "purge_image_versions_offset": {
-          "description": "PurgeImageVersionsOffset is the number of versions to keep.\nEach time a new version is created, the oldest version is purged.\nAllowed values range [1, inf).\n\nDefault value is 2.",
+          "description": "PurgeImageVersionsOffset is the number of versions to keep.\nEach time a new version is created, the oldest version is purged.\nAllowed values range [1, inf).\n\nDefault value is 1.",
           "type": "integer"
         }
       }
@@ -1731,9 +1728,6 @@
         },
         "runner_image_pull_secret_id": {
           "type": "string"
-        },
-        "settings": {
-          "$ref": "#/definitions/commons.RunnerImageSettings"
         },
         "warpbuild_snapshot_image": {
           "description": "WarpbuildSnapshotImage is the vm image used by warpbuild to run the jobs.\nThis will have the info for internal images managed by warpbuild when\ntype = 'warpbuild_managed'.\n\nIn case of container images, this will have the base image of the VM on\nwhich the container is run.",

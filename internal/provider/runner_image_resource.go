@@ -53,7 +53,7 @@ func (r *runnerImageResource) Schema(_ context.Context, _ resource.SchemaRequest
 		MarkdownDescription: "A BYOC (bring-your-own-cloud) AWS AMI runner image. " +
 			"The image's OS, architecture and root device are derived from the AMI by WarpBuild. " +
 			"Updating `ami_id` creates a new image version in place; older versions are purged " +
-			"according to `purge_image_versions_offset`.",
+			"automatically.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				MarkdownDescription: "Runner image ID.",
@@ -83,8 +83,7 @@ func (r *runnerImageResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Required: true,
 			},
 			"purge_image_versions_offset": schema.Int64Attribute{
-				MarkdownDescription: "Number of image versions to keep; each new version purges the oldest beyond this count.",
-				Optional:            true,
+				MarkdownDescription: "Number of image versions kept before older ones are purged. Managed by WarpBuild.",
 				Computed:            true,
 				PlanModifiers: []planmodifier.Int64{
 					int64planmodifier.UseStateForUnknown(),
@@ -139,11 +138,6 @@ func (r *runnerImageResource) Create(ctx context.Context, req resource.CreateReq
 			AmiId: plan.AmiID.ValueString(),
 		},
 	}
-	if !plan.PurgeImageVersionsOffset.IsNull() && !plan.PurgeImageVersionsOffset.IsUnknown() {
-		input.Settings = &wbclient.CommonsRunnerImageSettings{
-			PurgeImageVersionsOffset: int32Ptr(plan.PurgeImageVersionsOffset.ValueInt64()),
-		}
-	}
 
 	image, httpResp, err := r.client.V1RunnerImagesAPI.CreateRunnerImage(ctx).Body(input).Execute()
 	if err != nil {
@@ -187,11 +181,6 @@ func (r *runnerImageResource) Update(ctx context.Context, req resource.UpdateReq
 		ByocAmi: &wbclient.CommonsByocAMI{
 			AmiId: plan.AmiID.ValueString(),
 		},
-	}
-	if !plan.PurgeImageVersionsOffset.IsNull() && !plan.PurgeImageVersionsOffset.IsUnknown() {
-		input.Settings = &wbclient.CommonsRunnerImageSettings{
-			PurgeImageVersionsOffset: int32Ptr(plan.PurgeImageVersionsOffset.ValueInt64()),
-		}
 	}
 
 	image, httpResp, err := r.client.V1RunnerImagesAPI.UpdateRunnerImage(ctx, plan.ID.ValueString()).Body(input).Execute()

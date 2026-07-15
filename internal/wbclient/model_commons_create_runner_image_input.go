@@ -29,9 +29,8 @@ type CommonsCreateRunnerImageInput struct {
 	ContainerRunnerImage *CommonsContainerRunnerImage `json:"container_runner_image,omitempty"`
 	Hooks                []CommonsRunnerImageHook     `json:"hooks,omitempty"`
 	// OS of the image. For byoc_ami images this is derived from the AMI and may be omitted.
-	Os                      *string                     `json:"os,omitempty"`
-	RunnerImagePullSecretId *string                     `json:"runner_image_pull_secret_id,omitempty"`
-	Settings                *CommonsRunnerImageSettings `json:"settings,omitempty"`
+	Os                      *string `json:"os,omitempty"`
+	RunnerImagePullSecretId *string `json:"runner_image_pull_secret_id,omitempty"`
 	// StackID is the infrastructure stack (kind + region, e.g. an EC2 stack) the image belongs to. Required for byoc_ami; must be omitted for container images.
 	StackId *string `json:"stack_id,omitempty"`
 	// Type determines which of the type-specific payloads below is used.
@@ -277,38 +276,6 @@ func (o *CommonsCreateRunnerImageInput) SetRunnerImagePullSecretId(v string) {
 	o.RunnerImagePullSecretId = &v
 }
 
-// GetSettings returns the Settings field value if set, zero value otherwise.
-func (o *CommonsCreateRunnerImageInput) GetSettings() CommonsRunnerImageSettings {
-	if o == nil || IsNil(o.Settings) {
-		var ret CommonsRunnerImageSettings
-		return ret
-	}
-	return *o.Settings
-}
-
-// GetSettingsOk returns a tuple with the Settings field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *CommonsCreateRunnerImageInput) GetSettingsOk() (*CommonsRunnerImageSettings, bool) {
-	if o == nil || IsNil(o.Settings) {
-		return nil, false
-	}
-	return o.Settings, true
-}
-
-// HasSettings returns a boolean if a field has been set.
-func (o *CommonsCreateRunnerImageInput) HasSettings() bool {
-	if o != nil && !IsNil(o.Settings) {
-		return true
-	}
-
-	return false
-}
-
-// SetSettings gets a reference to the given CommonsRunnerImageSettings and assigns it to the Settings field.
-func (o *CommonsCreateRunnerImageInput) SetSettings(v CommonsRunnerImageSettings) {
-	o.Settings = &v
-}
-
 // GetStackId returns the StackId field value if set, zero value otherwise.
 func (o *CommonsCreateRunnerImageInput) GetStackId() string {
 	if o == nil || IsNil(o.StackId) {
@@ -426,9 +393,6 @@ func (o CommonsCreateRunnerImageInput) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.RunnerImagePullSecretId) {
 		toSerialize["runner_image_pull_secret_id"] = o.RunnerImagePullSecretId
 	}
-	if !IsNil(o.Settings) {
-		toSerialize["settings"] = o.Settings
-	}
 	if !IsNil(o.StackId) {
 		toSerialize["stack_id"] = o.StackId
 	}
@@ -487,7 +451,6 @@ func (o *CommonsCreateRunnerImageInput) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "hooks")
 		delete(additionalProperties, "os")
 		delete(additionalProperties, "runner_image_pull_secret_id")
-		delete(additionalProperties, "settings")
 		delete(additionalProperties, "stack_id")
 		delete(additionalProperties, "type")
 		delete(additionalProperties, "warpbuild_snapshot_image")
