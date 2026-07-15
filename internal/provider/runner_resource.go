@@ -3,7 +3,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	"net/http"
 
 	"github.com/WarpBuilds/terraform-provider-warpbuild/internal/wbclient"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -202,6 +201,9 @@ func (r *runnerResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 							"role_arn": schema.StringAttribute{
 								MarkdownDescription: "AWS IAM role ARN attached to runner instances.",
 								Optional:            true,
+								Validators: []validator.String{
+									stringvalidator.LengthAtLeast(1),
+								},
 							},
 							"is_public": schema.BoolAttribute{
 								MarkdownDescription: "Whether instances get public IPs.",
@@ -283,7 +285,7 @@ func (r *runnerResource) Read(ctx context.Context, req resource.ReadRequest, res
 
 	runner, httpResp, err := r.client.V1RunnersAPI.GetRunner(ctx, state.ID.ValueString()).Execute()
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == http.StatusNotFound {
+		if isNotFound(httpResp, err) {
 			resp.State.RemoveResource(ctx)
 			return
 		}
@@ -345,7 +347,7 @@ func (r *runnerResource) Delete(ctx context.Context, req resource.DeleteRequest,
 
 	_, httpResp, err := r.client.V1RunnersAPI.DeleteRunner(ctx, state.ID.ValueString()).Execute()
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == http.StatusNotFound {
+		if isNotFound(httpResp, err) {
 			return
 		}
 		resp.Diagnostics.AddError("Failed to delete runner", apiError(httpResp, err))
@@ -446,7 +448,7 @@ func (r *runnerResource) setState(ctx context.Context, m *runnerResourceModel, r
 		s, d := types.ObjectValueFrom(ctx, runnerByocSkuAttrTypes, runnerByocSkuModel{
 			Arch:           types.StringPointerValue(apiCfg.ByocSku.Arch),
 			InstanceTypes:  instanceTypes,
-			RoleArn:        types.StringPointerValue(apiCfg.ByocSku.RoleArn),
+			RoleArn:        emptyStringAsNull(apiCfg.ByocSku.RoleArn),
 			IsPublic:       types.BoolPointerValue(apiCfg.ByocSku.IsPublic),
 			Imdsv2Required: types.BoolPointerValue(apiCfg.ByocSku.Imdsv2Required),
 		})

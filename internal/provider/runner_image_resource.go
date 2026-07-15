@@ -3,7 +3,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	"net/http"
 
 	"github.com/WarpBuilds/terraform-provider-warpbuild/internal/wbclient"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -165,7 +164,7 @@ func (r *runnerImageResource) Read(ctx context.Context, req resource.ReadRequest
 
 	image, httpResp, err := r.client.V1RunnerImagesAPI.GetRunnerImage(ctx, state.ID.ValueString()).Execute()
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == http.StatusNotFound {
+		if isNotFound(httpResp, err) {
 			resp.State.RemoveResource(ctx)
 			return
 		}
@@ -214,7 +213,7 @@ func (r *runnerImageResource) Delete(ctx context.Context, req resource.DeleteReq
 
 	_, httpResp, err := r.client.V1RunnerImagesAPI.DeleteRunnerImage(ctx, state.ID.ValueString()).Execute()
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == http.StatusNotFound {
+		if isNotFound(httpResp, err) {
 			return
 		}
 		resp.Diagnostics.AddError("Failed to delete runner image", apiError(httpResp, err))
