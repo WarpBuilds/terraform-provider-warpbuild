@@ -23,153 +23,153 @@ import (
 type V1StacksAPI interface {
 
 	/*
-		ListStacks List stacks
+			ListStacks List stacks
 
-		Lists all infrastructure stacks for the authenticated organization. Stacks represent the cloud infrastructure configurations where runners will be deployed.
+			Lists all infrastructure stacks for the authenticated organization. Stacks represent the cloud infrastructure configurations where runners will be deployed.
 
-	Stacks can be filtered by cloud provider type (ec2, gce, avm) and status.
+		Stacks can be filtered by cloud provider type (ec2, gce, avm) and status.
 
-	## Code Examples
+		## Code Examples
 
-	### Shell (curl)
+		### Shell (curl)
 
-	```bash
-	# List all stacks
-	curl -X GET "https://api.warpbuild.com/api/v1/stacks" \
-	     -H "Authorization: Bearer <your-api-key>" \
-	     -H "Content-Type: application/json"
+		```bash
+		# List all stacks
+		curl -X GET "https://api.warpbuild.com/api/v1/stacks" \
+		     -H "Authorization: Bearer <your-api-key>" \
+		     -H "Content-Type: application/json"
 
-	# List only GCE stacks
-	curl -X GET "https://api.warpbuild.com/api/v1/stacks?kind=gce" \
-	     -H "Authorization: Bearer <your-api-key>" \
-	     -H "Content-Type: application/json"
-	```
+		# List only GCE stacks
+		curl -X GET "https://api.warpbuild.com/api/v1/stacks?kind=gce" \
+		     -H "Authorization: Bearer <your-api-key>" \
+		     -H "Content-Type: application/json"
+		```
 
-	### Example Response
+		### Example Response
 
-	```json
-	[
-	  {
-	    "id": "wbrakppu6twgj8el",
-	    "created_at": "2024-11-12T14:04:23.653724Z",
-	    "alias": "play-0001",
-	    "kind": "gce",
-	    "region": "us-central1",
-	    "configurations": {
-	      "gce_configurations": {
-	        "vpc_id": "play-0001wbrakppu-vpc",
-	        "storage_service_account_email": "sa-wbrakppu@playground-351903.iam.gserviceaccount.com",
-	        "security_group": [
-	          "play-0001-allow-internal"
-	        ],
-	        "subnets": [
-	          {
-	            "id": "play-0001wbrakppu-pu",
-	            "az": "",
-	            "is_public": true
-	          },
-	          {
-	            "id": "play-0001wbrakppu-pr",
-	            "az": "",
-	            "is_public": false
-	          }
-	        ],
-	        "cache_bucket": "play-0001-storage-bucket",
-	        "observability_bucket": "play-0001-storage-bucket",
-	        "tmpl_params": null
-	      },
-	      "default_tags": null
-	    },
-	    "connection_id": "f4a1e301-8adc-4142-8e0b-b4c8071ac266",
-	    "organization_id": "wfmn080eif8rniwq",
-	    "version": "v1.1",
-	    "status": "active",
-	    "onboarding_mode": "create",
-	    "meta": {
-	      "ec2_configurations": {
-	        "aws_cloudformation_stack_id": ""
-	      },
-	      "is_preferred": false
-	    },
-	    "latest_version": ""
-	  },
-	  {
-	    "id": "w1ltxzgxpv6o9bvp",
-	    "created_at": "2025-10-08T10:46:37.844131Z",
-	    "alias": "atk0",
-	    "kind": "avm",
-	    "region": "eastus",
-	    "configurations": {
-	      "default_tags": null
-	    },
-	    "connection_id": "9f77aea2-3162-44b4-b6f0-cdf84ce30a05",
-	    "organization_id": "wfmn080eif8rniwq",
-	    "version": "",
-	    "status": "pending",
-	    "onboarding_mode": "create",
-	    "meta": {
-	      "ec2_configurations": {
-	        "aws_cloudformation_stack_id": ""
-	      },
-	      "is_preferred": false
-	    },
-	    "latest_version": "v1.0"
-	  }
-	]
-	```
+		```json
+		[
+		  {
+		    "id": "wbrakppu6twgj8el",
+		    "created_at": "2024-11-12T14:04:23.653724Z",
+		    "alias": "play-0001",
+		    "kind": "gce",
+		    "region": "us-central1",
+		    "configurations": {
+		      "gce_configurations": {
+		        "vpc_id": "play-0001wbrakppu-vpc",
+		        "storage_service_account_email": "sa-wbrakppu@playground-351903.iam.gserviceaccount.com",
+		        "security_group": [
+		          "play-0001-allow-internal"
+		        ],
+		        "subnets": [
+		          {
+		            "id": "play-0001wbrakppu-pu",
+		            "az": "",
+		            "is_public": true
+		          },
+		          {
+		            "id": "play-0001wbrakppu-pr",
+		            "az": "",
+		            "is_public": false
+		          }
+		        ],
+		        "cache_bucket": "play-0001-storage-bucket",
+		        "observability_bucket": "play-0001-storage-bucket",
+		        "tmpl_params": null
+		      },
+		      "default_tags": null
+		    },
+		    "connection_id": "f4a1e301-8adc-4142-8e0b-b4c8071ac266",
+		    "organization_id": "wfmn080eif8rniwq",
+		    "version": "v1.1",
+		    "status": "active",
+		    "onboarding_mode": "create",
+		    "meta": {
+		      "ec2_configurations": {
+		        "aws_cloudformation_stack_id": ""
+		      },
+		      "is_preferred": false
+		    },
+		    "latest_version": ""
+		  },
+		  {
+		    "id": "w1ltxzgxpv6o9bvp",
+		    "created_at": "2025-10-08T10:46:37.844131Z",
+		    "alias": "atk0",
+		    "kind": "avm",
+		    "region": "eastus",
+		    "configurations": {
+		      "default_tags": null
+		    },
+		    "connection_id": "9f77aea2-3162-44b4-b6f0-cdf84ce30a05",
+		    "organization_id": "wfmn080eif8rniwq",
+		    "version": "",
+		    "status": "pending",
+		    "onboarding_mode": "create",
+		    "meta": {
+		      "ec2_configurations": {
+		        "aws_cloudformation_stack_id": ""
+		      },
+		      "is_preferred": false
+		    },
+		    "latest_version": "v1.0"
+		  }
+		]
+		```
 
-	### TypeScript
+		### TypeScript
 
-	```typescript
-	const response = await fetch(
-	  'https://api.warpbuild.com/api/v1/stacks',
-	  {
-	    method: 'GET',
-	    headers: {
-	      'Authorization': 'Bearer <your-api-key>',
-	      'Content-Type': 'application/json'
-	    }
-	  }
-	);
-	const stacks = await response.json();
-	console.log(`Found ${stacks.length} stacks`);
+		```typescript
+		const response = await fetch(
+		  'https://api.warpbuild.com/api/v1/stacks',
+		  {
+		    method: 'GET',
+		    headers: {
+		      'Authorization': 'Bearer <your-api-key>',
+		      'Content-Type': 'application/json'
+		    }
+		  }
+		);
+		const stacks = await response.json();
+		console.log(`Found ${stacks.length} stacks`);
 
-	// Group by cloud provider
-	const byKind = stacks.reduce((acc, stack) => {
-	  acc[stack.kind] = (acc[stack.kind] || 0) + 1;
-	  return acc;
-	}, {});
-	console.log('Stacks by provider:', byKind);
-	```
+		// Group by cloud provider
+		const byKind = stacks.reduce((acc, stack) => {
+		  acc[stack.kind] = (acc[stack.kind] || 0) + 1;
+		  return acc;
+		}, {});
+		console.log('Stacks by provider:', byKind);
+		```
 
-	### Python
+		### Python
 
-	```python
-	import requests
-	from collections import Counter
+		```python
+		import requests
+		from collections import Counter
 
-	response = requests.get(
-	    'https://api.warpbuild.com/api/v1/stacks',
-	    headers={
-	        'Authorization': 'Bearer <your-api-key>',
-	        'Content-Type': 'application/json'
-	    }
-	)
-	stacks = response.json()
-	print(f"Found {len(stacks)} stacks")
+		response = requests.get(
+		    'https://api.warpbuild.com/api/v1/stacks',
+		    headers={
+		        'Authorization': 'Bearer <your-api-key>',
+		        'Content-Type': 'application/json'
+		    }
+		)
+		stacks = response.json()
+		print(f"Found {len(stacks)} stacks")
 
-	# Group by cloud provider
-	by_kind = Counter(stack['kind'] for stack in stacks)
-	print(f"Stacks by provider: {dict(by_kind)}")
+		# Group by cloud provider
+		by_kind = Counter(stack['kind'] for stack in stacks)
+		print(f"Stacks by provider: {dict(by_kind)}")
 
-	# List active stacks
-	active_stacks = [s for s in stacks if s['status'] == 'active']
-	print(f"Active stacks: {len(active_stacks)}")
-	```
+		# List active stacks
+		active_stacks = [s for s in stacks if s['status'] == 'active']
+		print(f"Active stacks: {len(active_stacks)}")
+		```
 
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiListStacksRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiListStacksRequest
 	*/
 	ListStacks(ctx context.Context) ApiListStacksRequest
 
