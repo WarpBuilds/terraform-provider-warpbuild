@@ -13,7 +13,7 @@ cd "$(dirname "$0")/.."
 
 GENERATOR_IMAGE="openapitools/openapi-generator-cli:v7.7.0"
 CLIENT_DIR="internal/wbclient"
-FILTERED_SPEC="docs/swagger-filtered.json"
+FILTERED_SPEC="spec/swagger-filtered.json"
 
 if ! command -v redocly &> /dev/null; then
 	echo "redocly could not be found"
@@ -27,7 +27,7 @@ if [ ! -f ../backend-core/docs/swagger.json ]; then
 fi
 
 echo "Generating filtered spec -> $FILTERED_SPEC"
-mkdir -p docs
+mkdir -p spec
 redocly bundle filter -o "$FILTERED_SPEC" --ext json --remove-unused-components
 
 echo "Generating Go client -> $CLIENT_DIR"

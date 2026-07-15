@@ -1,0 +1,52 @@
+name: Acceptance tests
+
+# Runs the TF_ACC suite against the WarpBuild test environment after merges
+# to main (and on manual dispatch). Deliberately NOT run on pull_request:
+# the repo is public and the suite needs the org API key from repo secrets.
+#
+# Required repo configuration:
+#   secrets.WARPBUILD_ACC_API_KEY   API key for the test org
+#   vars.WARPBUILD_ACC_API_ENDPOINT test environment API endpoint
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: acceptance-tests
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  acceptance:
+    runs-on: warp-ubuntu-latest-x64-2x
+    steps:
+      - uses: WarpBuilds/checkout@warpbuild
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: Check test environment configuration
+        env:
+          ACC_KEY: ${{ secrets.WARPBUILD_ACC_API_KEY }}
+          ACC_ENDPOINT: ${{ vars.WARPBUILD_ACC_API_ENDPOINT }}
+        run: |
+          if [ -z "$ACC_KEY" ] || [ -z "$ACC_ENDPOINT" ]; then
+            echo "::error::Set secrets.WARPBUILD_ACC_API_KEY and vars.WARPBUILD_ACC_API_ENDPOINT on the repo."
+            exit 1
+          fi
+
+      - name: Run acceptance tests
+        env:
+          TF_ACC: "1"
+          WARPBUILD_API_KEY: ${{ secrets.WARPBUILD_ACC_API_KEY }}
+          WARPBUILD_API_ENDPOINT: ${{ vars.WARPBUILD_ACC_API_ENDPOINT }}
+        run: go test ./internal/provider/ -v -timeout 30m

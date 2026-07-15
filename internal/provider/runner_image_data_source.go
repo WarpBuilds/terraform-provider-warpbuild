@@ -100,18 +100,29 @@ func (d *runnerImageDataSource) Read(ctx context.Context, req datasource.ReadReq
 		return
 	}
 
-	if out == nil || len(out.RunnerImages) == 0 {
+	// The list endpoint applies the alias filter to organization images but
+	// appends WarpBuild-managed stock images regardless — match exactly here.
+	var matches []wbclient.CommonsRunnerImage
+	if out != nil {
+		for _, image := range out.RunnerImages {
+			if image.Alias != nil && *image.Alias == config.Alias.ValueString() {
+				matches = append(matches, image)
+			}
+		}
+	}
+
+	if len(matches) == 0 {
 		resp.Diagnostics.AddError("Runner image not found",
 			fmt.Sprintf("no runner image with alias %q", config.Alias.ValueString()))
 		return
 	}
-	if len(out.RunnerImages) > 1 {
+	if len(matches) > 1 {
 		resp.Diagnostics.AddError("Multiple runner images match",
-			fmt.Sprintf("%d runner images match alias %q", len(out.RunnerImages), config.Alias.ValueString()))
+			fmt.Sprintf("%d runner images match alias %q", len(matches), config.Alias.ValueString()))
 		return
 	}
 
-	image := out.RunnerImages[0]
+	image := matches[0]
 	config.ID = types.StringValue(image.Id)
 	config.Alias = types.StringPointerValue(image.Alias)
 	config.StackID = types.StringPointerValue(image.StackId)
