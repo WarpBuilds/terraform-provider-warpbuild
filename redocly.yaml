@@ -1,0 +1,21 @@
+apis:
+  filter:
+    root: ../backend-core/docs/swagger.json
+    decorators:
+      filter-in:
+        property: operationId
+        value:
+          # stacks (read-only lookup)
+          - ListStacks
+          # runner images (byoc_ami)
+          - ListRunnerImages
+          - CreateRunnerImage
+          - GetRunnerImage
+          - UpdateRunnerImage
+          - DeleteRunnerImage
+          # runners (custom runner sets)
+          - ListRunners
+          - SetupRunner
+          - GetRunner
+          - UpdateRunner
+          - DeleteRunner

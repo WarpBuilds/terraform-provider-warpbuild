@@ -1,0 +1,8 @@
+# Binaries / build output
+/terraform-provider-warpbuild
+/dist/
+
+# Local dev
+.terraform/
+*.tfstate*
+.env

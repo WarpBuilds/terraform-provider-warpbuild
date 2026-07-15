@@ -1,0 +1,1822 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is the docs for warp builds api for argonaut",
+    "title": "Warp Builds API Docs",
+    "contact": {
+      "name": "API Support",
+      "url": "http://www.swagger.io/support",
+      "email": "support@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "0.4.0"
+  },
+  "host": "api.warpbuild.com",
+  "basePath": "/api/v1",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/runner-images": {
+      "get": {
+        "security": [
+          {
+            "JWTKeyAuth": []
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "v1 Runner Images"
+        ],
+        "summary": "List all runner images.",
+        "operationId": "ListRunnerImages",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Alias",
+            "name": "alias",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Runner Image Pull Secret ID",
+            "name": "runner_image_pull_secret_id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Stack Kind",
+            "name": "stack_kind",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Region",
+            "name": "region",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "enum": [
+                "x64",
+                "arm64"
+              ],
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "Arch",
+            "name": "arch",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "enum": [
+                "mac",
+                "ubuntu"
+              ],
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "OS",
+            "name": "os",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "enum": [
+                "container",
+                "warpbuild_managed",
+                "byoc_ami",
+                "warpbuild_snapshot_image"
+              ],
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "Type",
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "Snapshot VCS Repositories Names. These will be an and operation so other image types if passed will be ignored except the warpbuild_managed images",
+            "name": "warpbuild_snapshot_image.vcs_repository_names",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "Snapshot VCS Branches Names. These will be an and operation so other image types if passed will be ignored except the warpbuild_managed images",
+            "name": "warpbuild_snapshot_image.vcs_ref_names",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "Snapshot VCS organization (GitHub org) names to filter snapshot images by",
+            "name": "warpbuild_snapshot_image.vcs_organization_names",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Page. Only supported when type doesn't include warpbuild_managed",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Per Page. Only supported when type doesn't include warpbuild_managed",
+            "name": "per_page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/commons.ListRunnerImagesOutput"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          }
+        },
+        "x-stability": "alpha"
+      },
+      "post": {
+        "security": [
+          {
+            "JWTKeyAuth": []
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "v1 Runner Images"
+        ],
+        "summary": "Create a new runner image.",
+        "operationId": "CreateRunnerImage",
+        "parameters": [
+          {
+            "description": "Runner Image",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/commons.CreateRunnerImageInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/commons.RunnerImage"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          }
+        },
+        "x-stability": "alpha"
+      }
+    },
+    "/runner-images/{id}": {
+      "get": {
+        "security": [
+          {
+            "JWTKeyAuth": []
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "v1 Runner Images"
+        ],
+        "summary": "Get runner image details for the id.",
+        "operationId": "GetRunnerImage",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Runner Image ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/commons.RunnerImage"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          }
+        },
+        "x-stability": "alpha"
+      },
+      "put": {
+        "security": [
+          {
+            "JWTKeyAuth": []
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "v1 Runner Images"
+        ],
+        "summary": "Update runner image details for the id.",
+        "operationId": "UpdateRunnerImage",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Runner Image ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Runner Image",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/commons.UpdateRunnerImageInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/commons.RunnerImage"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          }
+        },
+        "x-stability": "alpha"
+      },
+      "delete": {
+        "security": [
+          {
+            "JWTKeyAuth": []
+          }
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "v1 Runner Images"
+        ],
+        "summary": "Delete runner image details for the id.",
+        "operationId": "DeleteRunnerImage",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Runner Image ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/commons.RunnerImage"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          }
+        },
+        "x-stability": "alpha"
+      }
+    },
+    "/runners": {
+      "get": {
+        "security": [
+          {
+            "JWTKeyAuth": []
+          },
+          {
+            "APIKeyAuth": []
+          }
+        ],
+        "description": "Lists all runner sets for the authenticated organization. Runner sets define the configuration templates for runner instances that will be provisioned when CI/CD jobs request matching labels.\n\nYou can filter the results by image, provider, VCS integration, and other criteria using query parameters.\n\n## Code Examples\n\n### Shell (curl)\n\n```bash\n# List all runners\ncurl -X GET \"https://api.warpbuild.com/api/v1/runners\" \\\n     -H \"Authorization: Bearer <your-api-key>\" \\\n     -H \"Content-Type: application/json\"\n\n# List runners with filters\ncurl -X GET \"https://api.warpbuild.com/api/v1/runners?image=ubuntu-2204&active=true\" \\\n     -H \"Authorization: Bearer <your-api-key>\" \\\n     -H \"Content-Type: application/json\"\n```\n\n### Example Response\n\n```json\n[\n  {\n    \"id\": \"wzvojxk17eo3s1dq\",\n    \"created_at\": \"2024-10-09T17:28:02.050974Z\",\n    \"updated_at\": \"2024-10-09T17:28:02.050974Z\",\n    \"name\": \"warpdev-custom-test-custom-image\",\n    \"vcs_integration_id\": \"gh-wc0y0ob3oqymfsmj\",\n    \"configuration\": {\n      \"sku\": \"4x-x64-w1kkdpjem73cmowh\",\n      \"storage\": {\n        \"tier\": \"low\",\n        \"size\": 150,\n        \"iops\": 3200,\n        \"throughput\": 250,\n        \"disk_type\": \"pd-balanced\",\n        \"performance_tier\": \"\"\n      },\n      \"image\": \"wjqcx6ozzghczk5x\",\n      \"capacity_type\": \"ondemand\"\n    },\n    \"stock_runner_id\": null,\n    \"organization_id\": \"wfmn080eif8rniwq\",\n    \"labels\": [\n      \"warpdev-custom-test-custom-image\"\n    ],\n    \"active\": true,\n    \"provider_id\": \"\",\n    \"meta\": {}\n  },\n  {\n    \"id\": \"ws61znyfcp3mh95j\",\n    \"created_at\": \"2024-10-25T06:32:50.900502Z\",\n    \"updated_at\": \"2024-10-25T06:32:50.900502Z\",\n    \"name\": \"warpdev-ubuntu-2204-x64-8x\",\n    \"vcs_integration_id\": \"gh-wc0y0ob3oqymfsmj\",\n    \"configuration\": {\n      \"sku\": \"8x-x64-w80f032rccrc9nh2\",\n      \"storage\": {\n        \"tier\": \"custom\",\n        \"size\": 256,\n        \"iops\": 6666,\n        \"throughput\": 444,\n        \"disk_type\": \"\",\n        \"performance_tier\": \"P30\"\n      },\n      \"image\": \"ubuntu-2204\",\n      \"capacity_type\": \"ondemand\"\n    },\n    \"stock_runner_id\": \"stock-8x-x64-w80f032rccrc9nh2-VGcq1lK9Oa\",\n    \"organization_id\": \"wfmn080eif8rniwq\",\n    \"labels\": [\n      \"warpdev-ubuntu-2204-x64-8x\"\n    ],\n    \"active\": true,\n    \"provider_id\": null,\n    \"meta\": {}\n  }\n]\n```\n\n### TypeScript\n\n```typescript\n// List all runners\nconst response = await fetch(\n  'https://api.warpbuild.com/api/v1/runners',\n  {\n    method: 'GET',\n    headers: {\n      'Authorization': 'Bearer <your-api-key>',\n      'Content-Type': 'application/json'\n    }\n  }\n);\nconst runners = await response.json();\nconsole.log(`Found ${runners.length} runners`);\n\n// List runners with filters\nconst params = new URLSearchParams({\n  image: 'ubuntu-2204',\n  active: 'true'\n});\nconst filteredResponse = await fetch(\n  `https://api.warpbuild.com/api/v1/runners?${params}`,\n  {\n    method: 'GET',\n    headers: {\n      'Authorization': 'Bearer <your-api-key>',\n      'Content-Type': 'application/json'\n    }\n  }\n);\nconst filteredRunners = await filteredResponse.json();\n```\n\n### Python\n\n```python\nimport requests\n\n# List all runners\nresponse = requests.get(\n    'https://api.warpbuild.com/api/v1/runners',\n    headers={\n        'Authorization': 'Bearer <your-api-key>',\n        'Content-Type': 'application/json'\n    }\n)\nrunners = response.json()\nprint(f\"Found {len(runners)} runners\")\n\n# List runners with filters\nfiltered_response = requests.get(\n    'https://api.warpbuild.com/api/v1/runners',\n    params={\n        'image': 'ubuntu-2204',\n        'active': True\n    },\n    headers={\n        'Authorization': 'Bearer <your-api-key>',\n        'Content-Type': 'application/json'\n    }\n)\nfiltered_runners = filtered_response.json()\n```\n",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "v1 Runners"
+        ],
+        "summary": "List runners",
+        "operationId": "ListRunners",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Image",
+            "name": "image",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "list of runner set id's",
+            "name": "ids",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "provider kind id",
+            "name": "provider_id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Deprecated: ignored — runner sets are organization-global",
+            "name": "vcs_integration_id",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "description": "active",
+            "name": "active",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "labels",
+            "name": "labels",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/commons.Runner"
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          }
+        },
+        "x-stability": "alpha"
+      },
+      "post": {
+        "security": [
+          {
+            "JWTKeyAuth": []
+          },
+          {
+            "APIKeyAuth": []
+          }
+        ],
+        "description": "Creates a new runner set for the authenticated organization. A runner set defines the configuration template for runner instances that will be provisioned when CI/CD jobs request matching labels.\n\nYou can create different types of runners:\n- **Stock runners**: WarpBuild managed runners with pre-configured images\n- **Custom runners**: Bring Your Own Cloud (BYOC) runners on AWS EC2, GCP, or Azure\n- **Custom image runners**: Runners with custom container images or custom AMIs\n\n## Code Examples\n\n### 1. Create a Stock Runner (WarpBuild Managed)\n\nStock runners use WarpBuild's managed infrastructure with pre-configured images.\n\n#### Shell (curl)\n\n```bash\ncurl -X POST \"https://api.warpbuild.com/api/v1/runners\" \\\n     -H \"Authorization: Bearer <your-api-key>\" \\\n     -H \"Content-Type: application/json\" \\\n     -d '{\n       \"name\": \"my-ubuntu-runner-8x\",\n       \"vcs_integration_id\": \"gh-wc0y0ob3oqymfsmj\",\n       \"labels\": [\"my-ubuntu-runner-8x\"],\n       \"configuration\": {\n         \"sku\": \"8x-x64-w80f032rccrc9nh2\",\n         \"image\": \"ubuntu-2204\",\n         \"capacity_type\": \"ondemand\",\n         \"storage\": {\n           \"tier\": \"medium\",\n           \"size\": 150\n         }\n       }\n     }'\n```\n\n#### Example Response\n\n```json\n{\n  \"id\": \"wnewrunner12345\",\n  \"created_at\": \"2024-12-25T10:00:00.000000Z\",\n  \"updated_at\": \"2024-12-25T10:00:00.000000Z\",\n  \"name\": \"my-ubuntu-runner-8x\",\n  \"vcs_integration_id\": \"gh-wc0y0ob3oqymfsmj\",\n  \"configuration\": {\n    \"sku\": \"8x-x64-w80f032rccrc9nh2\",\n    \"storage\": {\n      \"tier\": \"medium\",\n      \"size\": 150,\n      \"iops\": 3000,\n      \"throughput\": 125,\n      \"disk_type\": \"\",\n      \"performance_tier\": \"\"\n    },\n    \"image\": \"ubuntu-2204\",\n    \"capacity_type\": \"ondemand\"\n  },\n  \"stock_runner_id\": \"stock-8x-x64-w80f032rccrc9nh2-ABC123\",\n  \"organization_id\": \"wfmn080eif8rniwq\",\n  \"labels\": [\"my-ubuntu-runner-8x\"],\n  \"active\": true,\n  \"provider_id\": null,\n  \"meta\": {}\n}\n```\n\n#### TypeScript\n\n```typescript\nconst response = await fetch(\n  'https://api.warpbuild.com/api/v1/runners',\n  {\n    method: 'POST',\n    headers: {\n      'Authorization': 'Bearer <your-api-key>',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      name: 'my-ubuntu-runner-8x',\n      vcs_integration_id: 'gh-wc0y0ob3oqymfsmj',\n      labels: ['my-ubuntu-runner-8x'],\n      configuration: {\n        sku: '8x-x64-w80f032rccrc9nh2',\n        image: 'ubuntu-2204',\n        capacity_type: 'ondemand',\n        storage: {\n          tier: 'medium',\n          size: 150\n        }\n      }\n    })\n  }\n);\nconst runner = await response.json();\nconsole.log(`Created runner: ${runner.id}`);\n```\n\n#### Python\n\n```python\nimport requests\n\nresponse = requests.post(\n    'https://api.warpbuild.com/api/v1/runners',\n    headers={\n        'Authorization': 'Bearer <your-api-key>',\n        'Content-Type': 'application/json'\n    },\n    json={\n        'name': 'my-ubuntu-runner-8x',\n        'vcs_integration_id': 'gh-wc0y0ob3oqymfsmj',\n        'labels': ['my-ubuntu-runner-8x'],\n        'configuration': {\n            'sku': '8x-x64-w80f032rccrc9nh2',\n            'image': 'ubuntu-2204',\n            'capacity_type': 'ondemand',\n            'storage': {\n                'tier': 'medium',\n                'size': 150\n            }\n        }\n    }\n)\nrunner = response.json()\nprint(f\"Created runner: {runner['id']}\")\n```\n\n### 2. Create a Custom Runner on GCP (BYOC)\n\nBring Your Own Cloud runner on Google Cloud Platform using your GCP project.\n\n#### Shell (curl)\n\n```bash\ncurl -X POST \"https://api.warpbuild.com/api/v1/runners\" \\\n     -H \"Authorization: Bearer <your-api-key>\" \\\n     -H \"Content-Type: application/json\" \\\n     -d '{\n       \"name\": \"my-gcp-runner\",\n       \"vcs_integration_id\": \"gh-wc0y0ob3oqymfsmj\",\n       \"provider_id\": \"ee7c619a-c68d-47e5-8385-1aac164cb555\",\n       \"labels\": [\"self-hosted\", \"linux\", \"x64\", \"gcp\"],\n       \"configuration\": {\n         \"image\": \"ubuntu-2404\",\n         \"capacity_type\": \"spot\",\n         \"byoc_sku\": {\n           \"arch\": \"x64\",\n           \"is_public\": false,\n           \"instance_types\": [\"n2-standard-4\", \"n2-standard-8\"],\n           \"network_tier\": \"STANDARD\"\n         },\n         \"storage\": {\n           \"tier\": \"custom\",\n           \"size\": 200,\n           \"disk_type\": \"pd-ssd\"\n         }\n       }\n     }'\n```\n\n#### TypeScript\n\n```typescript\nconst response = await fetch(\n  'https://api.warpbuild.com/api/v1/runners',\n  {\n    method: 'POST',\n    headers: {\n      'Authorization': 'Bearer <your-api-key>',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      name: 'my-gcp-runner',\n      vcs_integration_id: 'gh-wc0y0ob3oqymfsmj',\n      provider_id: 'ee7c619a-c68d-47e5-8385-1aac164cb555',\n      labels: ['self-hosted', 'linux', 'x64', 'gcp'],\n      configuration: {\n        image: 'ubuntu-2404',\n        capacity_type: 'spot',\n        byoc_sku: {\n          arch: 'x64',\n          is_public: false,\n          instance_types: ['n2-standard-4', 'n2-standard-8'],\n          network_tier: 'STANDARD'\n        },\n        storage: {\n          tier: 'custom',\n          size: 200,\n          disk_type: 'pd-ssd'\n        }\n      }\n    })\n  }\n);\nconst runner = await response.json();\n```\n\n#### Python\n\n```python\nimport requests\n\nresponse = requests.post(\n    'https://api.warpbuild.com/api/v1/runners',\n    headers={\n        'Authorization': 'Bearer <your-api-key>',\n        'Content-Type': 'application/json'\n    },\n    json={\n        'name': 'my-gcp-runner',\n        'vcs_integration_id': 'gh-wc0y0ob3oqymfsmj',\n        'provider_id': 'ee7c619a-c68d-47e5-8385-1aac164cb555',\n        'labels': ['self-hosted', 'linux', 'x64', 'gcp'],\n        'configuration': {\n            'image': 'ubuntu-2404',\n            'capacity_type': 'spot',\n            'byoc_sku': {\n                'arch': 'x64',\n                'is_public': False,\n                'instance_types': ['n2-standard-4', 'n2-standard-8'],\n                'network_tier': 'STANDARD'\n            },\n            'storage': {\n                'tier': 'custom',\n                'size': 200,\n                'disk_type': 'pd-ssd'\n            }\n        }\n    }\n)\nrunner = response.json()\n```\n\n### 3. Create a Custom Runner on Azure (BYOC)\n\nBring Your Own Cloud runner on Microsoft Azure.\n\n#### Shell (curl)\n\n```bash\ncurl -X POST \"https://api.warpbuild.com/api/v1/runners\" \\\n     -H \"Authorization: Bearer <your-api-key>\" \\\n     -H \"Content-Type: application/json\" \\\n     -d '{\n       \"name\": \"my-azure-runner\",\n       \"vcs_integration_id\": \"gh-wc0y0ob3oqymfsmj\",\n       \"provider_id\": \"9f77aea2-3162-44b4-b6f0-cdf84ce30a05\",\n       \"labels\": [\"self-hosted\", \"linux\", \"x64\", \"azure\"],\n       \"configuration\": {\n         \"image\": \"ubuntu-2404\",\n         \"capacity_type\": \"spot\",\n         \"byoc_sku\": {\n           \"arch\": \"x64\",\n           \"is_public\": false,\n           \"instance_types\": [\"Standard_D4s_v3\", \"Standard_D8s_v3\"]\n         },\n         \"storage\": {\n           \"tier\": \"high\",\n           \"size\": 200,\n           \"performance_tier\": \"P30\"\n         }\n       }\n     }'\n```\n\n#### TypeScript\n\n```typescript\nconst response = await fetch(\n  'https://api.warpbuild.com/api/v1/runners',\n  {\n    method: 'POST',\n    headers: {\n      'Authorization': 'Bearer <your-api-key>',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      name: 'my-azure-runner',\n      vcs_integration_id: 'gh-wc0y0ob3oqymfsmj',\n      provider_id: '9f77aea2-3162-44b4-b6f0-cdf84ce30a05',\n      labels: ['self-hosted', 'linux', 'x64', 'azure'],\n      configuration: {\n        image: 'ubuntu-2404',\n        capacity_type: 'spot',\n        byoc_sku: {\n          arch: 'x64',\n          is_public: false,\n          instance_types: ['Standard_D4s_v3', 'Standard_D8s_v3']\n        },\n        storage: {\n          tier: 'high',\n          size: 200,\n          performance_tier: 'P30'\n        }\n      }\n    })\n  }\n);\nconst runner = await response.json();\n```\n\n#### Python\n\n```python\nimport requests\n\nresponse = requests.post(\n    'https://api.warpbuild.com/api/v1/runners',\n    headers={\n        'Authorization': 'Bearer <your-api-key>',\n        'Content-Type': 'application/json'\n    },\n    json={\n        'name': 'my-azure-runner',\n        'vcs_integration_id': 'gh-wc0y0ob3oqymfsmj',\n        'provider_id': '9f77aea2-3162-44b4-b6f0-cdf84ce30a05',\n        'labels': ['self-hosted', 'linux', 'x64', 'azure'],\n        'configuration': {\n            'image': 'ubuntu-2404',\n            'capacity_type': 'spot',\n            'byoc_sku': {\n                'arch': 'x64',\n                'is_public': False,\n                'instance_types': ['Standard_D4s_v3', 'Standard_D8s_v3']\n            },\n            'storage': {\n                'tier': 'high',\n                'size': 200,\n                'performance_tier': 'P30'\n            }\n        }\n    }\n)\nrunner = response.json()\n```\n\n### 4. Create a Custom Runner with Custom Image\n\nRunner using a custom container image with a specific SKU.\n\n#### Shell (curl)\n\n```bash\ncurl -X POST \"https://api.warpbuild.com/api/v1/runners\" \\\n     -H \"Authorization: Bearer <your-api-key>\" \\\n     -H \"Content-Type: application/json\" \\\n     -d '{\n       \"name\": \"warpdev-custom-test-custom-image\",\n       \"vcs_integration_id\": \"gh-wc0y0ob3oqymfsmj\",\n       \"labels\": [\"warpdev-custom-test-custom-image\"],\n       \"configuration\": {\n         \"sku\": \"4x-x64-w1kkdpjem73cmowh\",\n         \"image\": \"wjqcx6ozzghczk5x\",\n         \"capacity_type\": \"ondemand\",\n         \"storage\": {\n           \"tier\": \"low\",\n           \"size\": 150,\n           \"iops\": 3200,\n           \"throughput\": 250,\n           \"disk_type\": \"pd-balanced\"\n         }\n       }\n     }'\n```\n\n#### Example Response\n\n```json\n{\n  \"id\": \"wzvojxk17eo3s1dq\",\n  \"created_at\": \"2024-10-09T17:28:02.050974Z\",\n  \"updated_at\": \"2024-10-09T17:28:02.050974Z\",\n  \"name\": \"warpdev-custom-test-custom-image\",\n  \"vcs_integration_id\": \"gh-wc0y0ob3oqymfsmj\",\n  \"configuration\": {\n    \"sku\": \"4x-x64-w1kkdpjem73cmowh\",\n    \"storage\": {\n      \"tier\": \"low\",\n      \"size\": 150,\n      \"iops\": 3200,\n      \"throughput\": 250,\n      \"disk_type\": \"pd-balanced\",\n      \"performance_tier\": \"\"\n    },\n    \"image\": \"wjqcx6ozzghczk5x\",\n    \"capacity_type\": \"ondemand\"\n  },\n  \"stock_runner_id\": null,\n  \"organization_id\": \"wfmn080eif8rniwq\",\n  \"labels\": [\n    \"warpdev-custom-test-custom-image\"\n  ],\n  \"active\": true,\n  \"provider_id\": \"\",\n  \"meta\": {}\n}\n```\n\n#### TypeScript\n\n```typescript\nconst response = await fetch(\n  'https://api.warpbuild.com/api/v1/runners',\n  {\n    method: 'POST',\n    headers: {\n      'Authorization': 'Bearer <your-api-key>',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      name: 'warpdev-custom-test-custom-image',\n      vcs_integration_id: 'gh-wc0y0ob3oqymfsmj',\n      labels: ['warpdev-custom-test-custom-image'],\n      configuration: {\n        sku: '4x-x64-w1kkdpjem73cmowh',\n        image: 'wjqcx6ozzghczk5x',\n        capacity_type: 'ondemand',\n        storage: {\n          tier: 'low',\n          size: 150,\n          iops: 3200,\n          throughput: 250,\n          disk_type: 'pd-balanced'\n        }\n      }\n    })\n  }\n);\nconst runner = await response.json();\n```\n\n#### Python\n\n```python\nimport requests\n\nresponse = requests.post(\n    'https://api.warpbuild.com/api/v1/runners',\n    headers={\n        'Authorization': 'Bearer <your-api-key>',\n        'Content-Type': 'application/json'\n    },\n    json={\n        'name': 'warpdev-custom-test-custom-image',\n        'vcs_integration_id': 'gh-wc0y0ob3oqymfsmj',\n        'labels': ['warpdev-custom-test-custom-image'],\n        'configuration': {\n            'sku': '4x-x64-w1kkdpjem73cmowh',\n            'image': 'wjqcx6ozzghczk5x',\n            'capacity_type': 'ondemand',\n            'storage': {\n                'tier': 'low',\n                'size': 150,\n                'iops': 3200,\n                'throughput': 250,\n                'disk_type': 'pd-balanced'\n            }\n        }\n    }\n)\nrunner = response.json()\n```\n",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "v1 Runners"
+        ],
+        "summary": "Create a new runner",
+        "operationId": "SetupRunner",
+        "parameters": [
+          {
+            "description": "Create new runner body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/commons.SetupRunnerInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/commons.Runner"
+            }
+          },
+          "default": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          }
+        },
+        "x-stability": "alpha"
+      }
+    },
+    "/runners/{id}": {
+      "get": {
+        "security": [
+          {
+            "JWTKeyAuth": []
+          },
+          {
+            "APIKeyAuth": []
+          }
+        ],
+        "description": "Retrieves a specific runner (runner set) by ID. Returns the runner configuration, status, labels, and associated metadata for the authenticated organization.\n\nA runner set defines the configuration template for runner instances that will be provisioned when CI/CD jobs request matching labels.\n\n## Code Examples\n\n### Shell (curl)\n\n```bash\ncurl -X GET \"https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq\" \\\n     -H \"Authorization: Bearer <your-api-key>\" \\\n     -H \"Content-Type: application/json\"\n```\n\n### Example Response\n\n```json\n{\n  \"id\": \"wzvojxk17eo3s1dq\",\n  \"created_at\": \"2024-10-09T17:28:02.050974Z\",\n  \"updated_at\": \"2024-10-09T17:28:02.050974Z\",\n  \"name\": \"warpdev-custom-test-custom-image\",\n  \"vcs_integration_id\": \"gh-wc0y0ob3oqymfsmj\",\n  \"configuration\": {\n    \"sku\": \"4x-x64-w1kkdpjem73cmowh\",\n    \"storage\": {\n      \"tier\": \"low\",\n      \"size\": 150,\n      \"iops\": 3200,\n      \"throughput\": 250,\n      \"disk_type\": \"pd-balanced\",\n      \"performance_tier\": \"\"\n    },\n    \"image\": \"wjqcx6ozzghczk5x\",\n    \"capacity_type\": \"ondemand\"\n  },\n  \"stock_runner_id\": null,\n  \"organization_id\": \"wfmn080eif8rniwq\",\n  \"labels\": [\n    \"warpdev-custom-test-custom-image\"\n  ],\n  \"active\": true,\n  \"provider_id\": \"\",\n  \"meta\": {}\n}\n```\n\n### TypeScript\n\n```typescript\nconst response = await fetch(\n  'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',\n  {\n    method: 'GET',\n    headers: {\n      'Authorization': 'Bearer <your-api-key>',\n      'Content-Type': 'application/json'\n    }\n  }\n);\nconst runner = await response.json();\nconsole.log(runner.name); // \"warpdev-custom-test-custom-image\"\nconsole.log(runner.configuration.sku); // \"4x-x64-w1kkdpjem73cmowh\"\n```\n\n### Python\n\n```python\nimport requests\n\nresponse = requests.get(\n    'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',\n    headers={\n        'Authorization': 'Bearer <your-api-key>',\n        'Content-Type': 'application/json'\n    }\n)\nrunner = response.json()\nprint(runner['name'])  # \"warpdev-custom-test-custom-image\"\nprint(runner['configuration']['sku'])  # \"4x-x64-w1kkdpjem73cmowh\"\n```\n",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "v1 Runners"
+        ],
+        "summary": "Get runner details",
+        "operationId": "GetRunner",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Runner ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/commons.Runner"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          }
+        },
+        "x-stability": "alpha"
+      },
+      "delete": {
+        "security": [
+          {
+            "JWTKeyAuth": []
+          },
+          {
+            "APIKeyAuth": []
+          }
+        ],
+        "description": "Deletes a runner set from the authenticated organization. This will remove the runner configuration and prevent new instances from being provisioned.\n\n**Warning:** Any running instances associated with this runner will be terminated. This action cannot be undone.\n\n## Code Examples\n\n### Shell (curl)\n\n```bash\ncurl -X DELETE \"https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq\" \\\n     -H \"Authorization: Bearer <your-api-key>\" \\\n     -H \"Content-Type: application/json\"\n```\n\n### Example Response\n\nReturns an empty response with status code `200` on success.\n\n```json\n{}\n```\n\n### TypeScript\n\n```typescript\nconst runnerId = 'wzvojxk17eo3s1dq';\n\nconst response = await fetch(\n  `https://api.warpbuild.com/api/v1/runners/${runnerId}`,\n  {\n    method: 'DELETE',\n    headers: {\n      'Authorization': 'Bearer <your-api-key>',\n      'Content-Type': 'application/json'\n    }\n  }\n);\n\nif (response.ok) {\n  console.log(`Runner ${runnerId} deleted successfully`);\n} else {\n  const error = await response.json();\n  console.error(`Failed to delete runner: ${error.message}`);\n}\n```\n\n### Python\n\n```python\nimport requests\n\nrunner_id = 'wzvojxk17eo3s1dq'\n\nresponse = requests.delete(\n    f'https://api.warpbuild.com/api/v1/runners/{runner_id}',\n    headers={\n        'Authorization': 'Bearer <your-api-key>',\n        'Content-Type': 'application/json'\n    }\n)\n\nif response.status_code == 200:\n    print(f\"Runner {runner_id} deleted successfully\")\nelse:\n    print(f\"Failed to delete runner: {response.json().get('message')}\")\n```\n",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "v1 Runners"
+        ],
+        "summary": "Delete a runner",
+        "operationId": "DeleteRunner",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Runner ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/commons.Runner"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          }
+        },
+        "x-stability": "alpha"
+      },
+      "patch": {
+        "security": [
+          {
+            "JWTKeyAuth": []
+          },
+          {
+            "APIKeyAuth": []
+          }
+        ],
+        "description": "Updates an existing runner set configuration. Only the fields specified in the request body will be updated; all other fields remain unchanged.\n\nYou can update various aspects of a runner including its name, labels, storage configuration, and capacity type.\n\n## Code Examples\n\n### 1. Update Runner Labels\n\n#### Shell (curl)\n\n```bash\ncurl -X PUT \"https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq\" \\\n     -H \"Authorization: Bearer <your-api-key>\" \\\n     -H \"Content-Type: application/json\" \\\n     -d '{\n       \"labels\": [\"my-runner\", \"ubuntu\", \"x64\"]\n     }'\n```\n\n#### Example Response\n\n```json\n{\n  \"id\": \"wzvojxk17eo3s1dq\",\n  \"created_at\": \"2024-10-09T17:28:02.050974Z\",\n  \"updated_at\": \"2024-12-25T10:30:00.000000Z\",\n  \"name\": \"warpdev-custom-test-custom-image\",\n  \"vcs_integration_id\": \"gh-wc0y0ob3oqymfsmj\",\n  \"configuration\": {\n    \"sku\": \"4x-x64-w1kkdpjem73cmowh\",\n    \"storage\": {\n      \"tier\": \"low\",\n      \"size\": 150,\n      \"iops\": 3200,\n      \"throughput\": 250,\n      \"disk_type\": \"pd-balanced\",\n      \"performance_tier\": \"\"\n    },\n    \"image\": \"wjqcx6ozzghczk5x\",\n    \"capacity_type\": \"ondemand\"\n  },\n  \"stock_runner_id\": null,\n  \"organization_id\": \"wfmn080eif8rniwq\",\n  \"labels\": [\n    \"my-runner\",\n    \"ubuntu\",\n    \"x64\"\n  ],\n  \"active\": true,\n  \"provider_id\": \"\",\n  \"meta\": {}\n}\n```\n\n#### TypeScript\n\n```typescript\nconst response = await fetch(\n  'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',\n  {\n    method: 'PUT',\n    headers: {\n      'Authorization': 'Bearer <your-api-key>',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      labels: ['my-runner', 'ubuntu', 'x64']\n    })\n  }\n);\nconst updatedRunner = await response.json();\nconsole.log(`Updated labels: ${updatedRunner.labels.join(', ')}`);\n```\n\n#### Python\n\n```python\nimport requests\n\nresponse = requests.put(\n    'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',\n    headers={\n        'Authorization': 'Bearer <your-api-key>',\n        'Content-Type': 'application/json'\n    },\n    json={\n        'labels': ['my-runner', 'ubuntu', 'x64']\n    }\n)\nupdated_runner = response.json()\nprint(f\"Updated labels: {updated_runner['labels']}\")\n```\n\n### 2. Update Runner Configuration\n\n#### Shell (curl)\n\n```bash\ncurl -X PUT \"https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq\" \\\n     -H \"Authorization: Bearer <your-api-key>\" \\\n     -H \"Content-Type: application/json\" \\\n     -d '{\n       \"configuration\": {\n         \"sku\": \"8x-x64-w80f032rccrc9nh2\",\n         \"capacity_type\": \"spot\",\n         \"storage\": {\n           \"tier\": \"high\",\n           \"size\": 200\n         }\n       }\n     }'\n```\n\n#### TypeScript\n\n```typescript\nconst response = await fetch(\n  'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',\n  {\n    method: 'PUT',\n    headers: {\n      'Authorization': 'Bearer <your-api-key>',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      configuration: {\n        sku: '8x-x64-w80f032rccrc9nh2',\n        capacity_type: 'spot',\n        storage: {\n          tier: 'high',\n          size: 200\n        }\n      }\n    })\n  }\n);\nconst updatedRunner = await response.json();\n```\n\n#### Python\n\n```python\nimport requests\n\nresponse = requests.put(\n    'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',\n    headers={\n        'Authorization': 'Bearer <your-api-key>',\n        'Content-Type': 'application/json'\n    },\n    json={\n        'configuration': {\n            'sku': '8x-x64-w80f032rccrc9nh2',\n            'capacity_type': 'spot',\n            'storage': {\n                'tier': 'high',\n                'size': 200\n            }\n        }\n    }\n)\nupdated_runner = response.json()\n```\n\n### 3. Enable/Disable Runner\n\n#### Shell (curl)\n\n```bash\n# Disable a runner\ncurl -X PUT \"https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq\" \\\n     -H \"Authorization: Bearer <your-api-key>\" \\\n     -H \"Content-Type: application/json\" \\\n     -d '{\n       \"active\": false\n     }'\n\n# Re-enable a runner\ncurl -X PUT \"https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq\" \\\n     -H \"Authorization: Bearer <your-api-key>\" \\\n     -H \"Content-Type: application/json\" \\\n     -d '{\n       \"active\": true\n     }'\n```\n\n#### TypeScript\n\n```typescript\n// Disable a runner\nconst response = await fetch(\n  'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',\n  {\n    method: 'PUT',\n    headers: {\n      'Authorization': 'Bearer <your-api-key>',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      active: false\n    })\n  }\n);\nconst updatedRunner = await response.json();\nconsole.log(`Runner active: ${updatedRunner.active}`);\n```\n\n#### Python\n\n```python\nimport requests\n\n# Disable a runner\nresponse = requests.put(\n    'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',\n    headers={\n        'Authorization': 'Bearer <your-api-key>',\n        'Content-Type': 'application/json'\n    },\n    json={\n        'active': False\n    }\n)\nupdated_runner = response.json()\nprint(f\"Runner active: {updated_runner['active']}\")\n```\n",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "v1 Runners"
+        ],
+        "summary": "Update a runner",
+        "operationId": "UpdateRunner",
+        "parameters": [
+          {
+            "description": "update runner body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/commons.UpdateRunnerInput"
+            }
+          },
+          {
+            "type": "string",
+            "description": "Runner ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/commons.Runner"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          }
+        },
+        "x-stability": "alpha"
+      }
+    },
+    "/stacks": {
+      "get": {
+        "security": [
+          {
+            "JWTKeyAuth": []
+          },
+          {
+            "APIKeyAuth": []
+          }
+        ],
+        "description": "Lists all infrastructure stacks for the authenticated organization. Stacks represent the cloud infrastructure configurations where runners will be deployed.\n\nStacks can be filtered by cloud provider type (ec2, gce, avm) and status.\n\n## Code Examples\n\n### Shell (curl)\n\n```bash\n# List all stacks\ncurl -X GET \"https://api.warpbuild.com/api/v1/stacks\" \\\n     -H \"Authorization: Bearer <your-api-key>\" \\\n     -H \"Content-Type: application/json\"\n\n# List only GCE stacks\ncurl -X GET \"https://api.warpbuild.com/api/v1/stacks?kind=gce\" \\\n     -H \"Authorization: Bearer <your-api-key>\" \\\n     -H \"Content-Type: application/json\"\n```\n\n### Example Response\n\n```json\n[\n  {\n    \"id\": \"wbrakppu6twgj8el\",\n    \"created_at\": \"2024-11-12T14:04:23.653724Z\",\n    \"alias\": \"play-0001\",\n    \"kind\": \"gce\",\n    \"region\": \"us-central1\",\n    \"configurations\": {\n      \"gce_configurations\": {\n        \"vpc_id\": \"play-0001wbrakppu-vpc\",\n        \"storage_service_account_email\": \"sa-wbrakppu@playground-351903.iam.gserviceaccount.com\",\n        \"security_group\": [\n          \"play-0001-allow-internal\"\n        ],\n        \"subnets\": [\n          {\n            \"id\": \"play-0001wbrakppu-pu\",\n            \"az\": \"\",\n            \"is_public\": true\n          },\n          {\n            \"id\": \"play-0001wbrakppu-pr\",\n            \"az\": \"\",\n            \"is_public\": false\n          }\n        ],\n        \"cache_bucket\": \"play-0001-storage-bucket\",\n        \"observability_bucket\": \"play-0001-storage-bucket\",\n        \"tmpl_params\": null\n      },\n      \"default_tags\": null\n    },\n    \"connection_id\": \"f4a1e301-8adc-4142-8e0b-b4c8071ac266\",\n    \"organization_id\": \"wfmn080eif8rniwq\",\n    \"version\": \"v1.1\",\n    \"status\": \"active\",\n    \"onboarding_mode\": \"create\",\n    \"meta\": {\n      \"ec2_configurations\": {\n        \"aws_cloudformation_stack_id\": \"\"\n      },\n      \"is_preferred\": false\n    },\n    \"latest_version\": \"\"\n  },\n  {\n    \"id\": \"w1ltxzgxpv6o9bvp\",\n    \"created_at\": \"2025-10-08T10:46:37.844131Z\",\n    \"alias\": \"atk0\",\n    \"kind\": \"avm\",\n    \"region\": \"eastus\",\n    \"configurations\": {\n      \"default_tags\": null\n    },\n    \"connection_id\": \"9f77aea2-3162-44b4-b6f0-cdf84ce30a05\",\n    \"organization_id\": \"wfmn080eif8rniwq\",\n    \"version\": \"\",\n    \"status\": \"pending\",\n    \"onboarding_mode\": \"create\",\n    \"meta\": {\n      \"ec2_configurations\": {\n        \"aws_cloudformation_stack_id\": \"\"\n      },\n      \"is_preferred\": false\n    },\n    \"latest_version\": \"v1.0\"\n  }\n]\n```\n\n### TypeScript\n\n```typescript\nconst response = await fetch(\n  'https://api.warpbuild.com/api/v1/stacks',\n  {\n    method: 'GET',\n    headers: {\n      'Authorization': 'Bearer <your-api-key>',\n      'Content-Type': 'application/json'\n    }\n  }\n);\nconst stacks = await response.json();\nconsole.log(`Found ${stacks.length} stacks`);\n\n// Group by cloud provider\nconst byKind = stacks.reduce((acc, stack) => {\n  acc[stack.kind] = (acc[stack.kind] || 0) + 1;\n  return acc;\n}, {});\nconsole.log('Stacks by provider:', byKind);\n```\n\n### Python\n\n```python\nimport requests\nfrom collections import Counter\n\nresponse = requests.get(\n    'https://api.warpbuild.com/api/v1/stacks',\n    headers={\n        'Authorization': 'Bearer <your-api-key>',\n        'Content-Type': 'application/json'\n    }\n)\nstacks = response.json()\nprint(f\"Found {len(stacks)} stacks\")\n\n# Group by cloud provider\nby_kind = Counter(stack['kind'] for stack in stacks)\nprint(f\"Stacks by provider: {dict(by_kind)}\")\n\n# List active stacks\nactive_stacks = [s for s in stacks if s['status'] == 'active']\nprint(f\"Active stacks: {len(active_stacks)}\")\n```\n",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "v1 Stacks"
+        ],
+        "summary": "List stacks",
+        "operationId": "ListStacks",
+        "parameters": [
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "list of stack id's",
+            "name": "ids",
+            "in": "query"
+          },
+          {
+            "enum": [
+              "ec2"
+            ],
+            "type": "string",
+            "description": "kind",
+            "name": "kind",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "alias",
+            "name": "alias",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "region",
+            "name": "region",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "connection_id",
+            "name": "connection_id",
+            "in": "query"
+          },
+          {
+            "enum": [
+              "active",
+              "pending",
+              "failed"
+            ],
+            "type": "string",
+            "description": "stack status",
+            "name": "status",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/commons.Stack"
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          }
+        },
+        "x-stability": "alpha"
+      }
+    }
+  },
+  "definitions": {
+    "SubnetInput": {
+      "type": "object",
+      "required": [
+        "az",
+        "id",
+        "is_public"
+      ],
+      "properties": {
+        "az": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "is_public": {
+          "type": "boolean"
+        }
+      }
+    },
+    "WarpBuildAPIError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "sub_code": {
+          "type": "string"
+        },
+        "sub_message": {
+          "type": "string"
+        }
+      }
+    },
+    "commons.AVMConfigurations": {
+      "type": "object",
+      "properties": {
+        "cache_bucket": {
+          "type": "string"
+        },
+        "observability_bucket": {
+          "type": "string"
+        },
+        "resource_group": {
+          "type": "string"
+        },
+        "security_group": {
+          "type": "string"
+        },
+        "storage_account": {
+          "type": "string"
+        },
+        "subnets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubnetInput"
+          }
+        },
+        "tmpl_params": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "vnet": {
+          "type": "string"
+        }
+      }
+    },
+    "commons.ByocAMI": {
+      "type": "object",
+      "required": [
+        "ami_id"
+      ],
+      "properties": {
+        "ami_id": {
+          "description": "AmiID is the AWS AMI ID of the customer-owned image.",
+          "type": "string"
+        },
+        "root_device_name": {
+          "description": "RootDeviceName is the root device name of the AMI (e.g. /dev/sda1).\nDefaults are resolved from the AMI when omitted.",
+          "type": "string"
+        }
+      }
+    },
+    "commons.ByocSku": {
+      "type": "object",
+      "properties": {
+        "arch": {
+          "description": "Arch is the CPU architecture (x64 or arm64)",
+          "type": "string",
+          "example": "x64"
+        },
+        "imdsv2_required": {
+          "description": "IMDSv2Required when set to true, enforces IMDSv2 and disables IMDSv1 for EC2 instances.\nThis is only applicable for AWS EC2 based runners. Passing this for\nother providers will have no effect.\nThis helps prevent Server Side Request Forgery (SSRF) attacks.\nDefault is false (both IMDSv1 and IMDSv2 are allowed).",
+          "type": "boolean"
+        },
+        "instance_types": {
+          "description": "InstanceTypes lists acceptable EC2/GCE/Azure instance types",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "m5.xlarge",
+            "m5.2xlarge"
+          ]
+        },
+        "is_public": {
+          "description": "IsPublic indicates whether instances should have public IPs",
+          "type": "boolean",
+          "example": false
+        },
+        "network_tier": {
+          "description": "NetworkTier is the network tier associated with the instance.\nThis is only applicable for GCP based runners. Passing this for\nother providers will have no effect.\n\nPossible values:\n\n- PREMIUM: A premium network tier with fast network performance.\n\n- STANDARD: A standard network tier with basic features.\n\nRefer: https://cloud.google.com/network-tiers\n\nDefault value is automatically picked if nothing is passed in case of GCP.\n\n+Default: STANDARD",
+          "type": "string",
+          "enum": [
+            "STANDARD",
+            "PREMIUM"
+          ],
+          "example": "STANDARD"
+        },
+        "role_arn": {
+          "description": "RoleARN is the AWS IAM role ARN for assuming cloud permissions",
+          "type": "string",
+          "example": "arn:aws:iam::123456789012:role/WarpBuildRole"
+        }
+      }
+    },
+    "commons.ContainerRunnerImage": {
+      "type": "object",
+      "properties": {
+        "args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "command": {
+          "type": "string"
+        },
+        "entrypoint": {
+          "type": "string"
+        },
+        "environment_variables": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "image_repository": {
+          "type": "string"
+        },
+        "image_tag": {
+          "type": "string"
+        }
+      }
+    },
+    "commons.ContainerRunnerImageUpdate": {
+      "type": "object",
+      "properties": {
+        "image_tag": {
+          "type": "string"
+        }
+      }
+    },
+    "commons.ContainerRunnerImageVersion": {
+      "type": "object",
+      "properties": {
+        "data_dir_size": {
+          "type": "string"
+        },
+        "image_digest": {
+          "type": "string"
+        },
+        "image_repository": {
+          "type": "string"
+        },
+        "image_size": {
+          "type": "string"
+        },
+        "image_tag": {
+          "type": "string"
+        },
+        "image_uri": {
+          "description": "ImageURI is the full uri of the image.\nThis can be used to download the image\n\n+OutputOnly",
+          "type": "string"
+        },
+        "snapshot_id": {
+          "type": "string"
+        },
+        "snapshot_size": {
+          "type": "string"
+        },
+        "volume_id": {
+          "type": "string"
+        },
+        "volume_size_gb": {
+          "description": "VolumeSizeGB is the size of the volume in GB.\nThis is used when creating a snapshot out of the volume.\n\nThis is rounded up to the nearest GiB.",
+          "type": "integer"
+        }
+      }
+    },
+    "commons.CreateRunnerImageInput": {
+      "type": "object",
+      "required": [
+        "alias",
+        "type"
+      ],
+      "properties": {
+        "alias": {
+          "description": "Alias is the human-friendly name of the image. Unique within the\norganization and immutable after creation.",
+          "type": "string"
+        },
+        "arch": {
+          "description": "Arch is the CPU architecture. For byoc_ami images this is derived from\nthe AMI when available and may be omitted.",
+          "type": "string",
+          "enum": [
+            "x64",
+            "arm64"
+          ]
+        },
+        "byoc_ami": {
+          "$ref": "#/definitions/commons.ByocAMI"
+        },
+        "container_runner_image": {
+          "$ref": "#/definitions/commons.ContainerRunnerImage"
+        },
+        "hooks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/commons.RunnerImageHook"
+          }
+        },
+        "os": {
+          "description": "OS of the image. For byoc_ami images this is derived from the AMI and\nmay be omitted.",
+          "type": "string",
+          "enum": [
+            "mac",
+            "ubuntu"
+          ]
+        },
+        "runner_image_pull_secret_id": {
+          "type": "string"
+        },
+        "settings": {
+          "$ref": "#/definitions/commons.RunnerImageSettings"
+        },
+        "stack_id": {
+          "description": "StackID is the infrastructure stack (kind + region, e.g. an EC2 stack)\nthe image belongs to. Required for byoc_ami; must be omitted for\ncontainer images.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type determines which of the type-specific payloads below is used.",
+          "type": "string"
+        },
+        "warpbuild_snapshot_image": {
+          "description": "WarpbuildSnapshotImage is the vm image used by warpbuild to run the jobs.\nThis will have the info for internal images managed by warpbuild when\ntype = 'warpbuild_managed'.\n\nIn case of container images, this will have the base image of the VM on\nwhich the container is run.",
+          "$ref": "#/definitions/commons.WarpbuildSnapshotImage"
+        }
+      }
+    },
+    "commons.EC2Configurations": {
+      "type": "object",
+      "properties": {
+        "cache_bucket": {
+          "type": "string"
+        },
+        "docker_builder_security_group": {
+          "type": "string"
+        },
+        "observability_bucket": {
+          "type": "string"
+        },
+        "role_arn": {
+          "type": "string"
+        },
+        "security_group": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "subnets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubnetInput"
+          }
+        },
+        "tmpl_params": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "vpc_id": {
+          "type": "string"
+        }
+      }
+    },
+    "commons.EC2Meta": {
+      "type": "object",
+      "properties": {
+        "aws_cloudformation_stack_id": {
+          "type": "string"
+        }
+      }
+    },
+    "commons.GCEConfigurations": {
+      "type": "object",
+      "properties": {
+        "cache_bucket": {
+          "type": "string"
+        },
+        "observability_bucket": {
+          "type": "string"
+        },
+        "security_group": {
+          "description": "SecurityGroups is list of firewalls",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "storage_service_account_email": {
+          "type": "string"
+        },
+        "subnets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubnetInput"
+          }
+        },
+        "tmpl_params": {
+          "description": "TmplParams can be use for create flow.\n\nSupported keys:\n\n\"VpcCIDR\": string\n\n\"PublicSubnet1CIDR\": string\n\n\"PrivateSubnet1CIDR\": string\n\n\"EnablePrivateSubnets\": bool\n\n\"Region\": string",
+          "$ref": "#/definitions/commons.TmplParams"
+        },
+        "vpc_id": {
+          "type": "string"
+        }
+      }
+    },
+    "commons.KindMeta": {
+      "type": "object",
+      "properties": {
+        "ec2_configurations": {
+          "$ref": "#/definitions/commons.EC2Meta"
+        },
+        "is_preferred": {
+          "description": "Deprecated: IsPreferred is no longer consulted by the routing\nbinders — preference is encoded in the routing tree's entry order.\nThe (kind, region) invariant requires exactly one active stack,\nso there's nothing to break ties on. Field stays for compatibility\nwith stored rows; will be removed once data is audited and the\ncolumn is dropped.",
+          "type": "boolean"
+        }
+      }
+    },
+    "commons.KubevirtConfigurations": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string"
+        },
+        "registry_secret": {
+          "type": "string"
+        }
+      }
+    },
+    "commons.ListRunnerImagesOutput": {
+      "type": "object",
+      "required": [
+        "runner_images"
+      ],
+      "properties": {
+        "next_page": {
+          "type": "integer"
+        },
+        "page": {
+          "type": "integer"
+        },
+        "per_page": {
+          "type": "integer"
+        },
+        "runner_images": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/commons.RunnerImage"
+          }
+        },
+        "total_items": {
+          "type": "integer"
+        },
+        "total_pages": {
+          "type": "integer"
+        }
+      }
+    },
+    "commons.NomadConfigurations": {
+      "type": "object",
+      "properties": {
+        "data_center": {
+          "description": "legacy nomad/ controller only",
+          "type": "string"
+        },
+        "data_centers": {
+          "description": "Used by the nomad-mtls controller (StackNomad).",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "host": {
+          "type": "string"
+        },
+        "meta_filters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "commons.OrchardConfigurations": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "vm_password": {
+          "type": "string"
+        },
+        "vm_username": {
+          "type": "string"
+        }
+      }
+    },
+    "commons.R2Configurations": {
+      "type": "object",
+      "properties": {
+        "access_key": {
+          "type": "string"
+        },
+        "access_key_secret": {
+          "type": "string"
+        },
+        "account_id": {
+          "type": "string"
+        },
+        "cache_bucket": {
+          "description": "Distinct R2 buckets (eu vs. us) are separate\nstack rows, matching the per-stack-account model above.",
+          "type": "string"
+        }
+      }
+    },
+    "commons.Runner": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "description": "Active indicates whether the runner is enabled",
+          "type": "boolean",
+          "example": true
+        },
+        "configuration": {
+          "description": "Configuration contains the hardware and OS settings",
+          "$ref": "#/definitions/commons.RunnerSetConfiguration"
+        },
+        "created_at": {
+          "description": "CreatedAt is the timestamp when the runner was created",
+          "type": "string"
+        },
+        "id": {
+          "description": "Id is the unique identifier for the runner",
+          "type": "string",
+          "example": "runner_abc123"
+        },
+        "labels": {
+          "description": "Labels are custom tags for runner selection in CI workflows",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "warp-ubuntu-2404-x64-4x"
+          ]
+        },
+        "meta": {
+          "description": "Meta contains additional runner metadata",
+          "$ref": "#/definitions/commons.SetMeta"
+        },
+        "name": {
+          "description": "Name is the display name of the runner",
+          "type": "string",
+          "example": "my-ubuntu-runner"
+        },
+        "organization_id": {
+          "description": "OrganizationId is the owner organization",
+          "type": "string",
+          "example": "org_abc123"
+        },
+        "provider_id": {
+          "description": "ProviderId is the stack ID the BYOC runner set provisions into",
+          "type": "string",
+          "example": "cloud_xyz789"
+        },
+        "stock_runner_id": {
+          "description": "StockRunnerId references a stock runner template if applicable",
+          "type": "string",
+          "example": "stock_xyz"
+        },
+        "updated_at": {
+          "description": "UpdatedAt is the timestamp when the runner was last updated",
+          "type": "string"
+        },
+        "vcs_integration_id": {
+          "description": "Deprecated: runner sets are organization-global — never read this for logic. It is\nonly still stamped on create (any connected GitHub org, not \"the serving org\") so\nprevious releases keep working after a code rollback.",
+          "type": "string",
+          "example": "vcs_abc123"
+        }
+      }
+    },
+    "commons.RunnerImage": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "alias": {
+          "type": "string"
+        },
+        "arch": {
+          "description": "Arch is the CPU architecture (x64 or arm64)",
+          "type": "string"
+        },
+        "byoc_ami": {
+          "$ref": "#/definitions/commons.ByocAMI"
+        },
+        "container_runner_image": {
+          "$ref": "#/definitions/commons.ContainerRunnerImage"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "deprecated": {
+          "description": "Deprecated indicates the image is still functional but should not be\npicked for new workflows. Currently populated only for\n`warpbuild_managed` images; other types default to false.",
+          "type": "boolean"
+        },
+        "hooks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/commons.RunnerImageHook"
+          }
+        },
+        "id": {
+          "type": "string"
+        },
+        "organization_id": {
+          "type": "string"
+        },
+        "os": {
+          "type": "string"
+        },
+        "parent_image_id": {
+          "type": "string"
+        },
+        "root_parent_image_id": {
+          "type": "string"
+        },
+        "runner_image_pull_secret_id": {
+          "type": "string"
+        },
+        "settings": {
+          "$ref": "#/definitions/commons.RunnerImageSettings"
+        },
+        "stack_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "creating",
+            "updating",
+            "deleting",
+            "available",
+            "failed"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "container",
+            "warpbuild_managed",
+            "warpbuild_snapshot_image",
+            "byoc_ami"
+          ]
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "version": {
+          "description": "Version is the latest version of the runner image.\nThis is present if the runner image is available to be used.\n\nThis is only populated by the runner image GET endpoint.\n\nThis is not populated if the type is 'warpbuild_managed'.",
+          "$ref": "#/definitions/commons.RunnerImageVersion"
+        },
+        "warpbuild_image": {
+          "description": "WarpbuildImage is the vm image used by warpbuild to run the jobs.\nThis will have the info for internal images managed by warpbuild when\ntype = 'warpbuild_managed'.\n\nIn case of container images, this will have the base image of the VM on\nwhich the container is run.",
+          "$ref": "#/definitions/commons.WarpbuildImage"
+        },
+        "warpbuild_snapshot_image": {
+          "description": "WarpbuildSnapshotImage contains the latest mutation request made on the\nrunner image.\n\nUse warpbuild_image field instead if you wish to get the ami id",
+          "$ref": "#/definitions/commons.WarpbuildSnapshotImage"
+        },
+        "work_dir": {
+          "type": "string"
+        }
+      }
+    },
+    "commons.RunnerImageHook": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "description": "File is the base64 encoded file.\nThis must be a shell script which is encoded in base64.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type is the type of hook.",
+          "type": "string",
+          "enum": [
+            "github_prehook",
+            "github_posthook"
+          ]
+        }
+      }
+    },
+    "commons.RunnerImageSettings": {
+      "type": "object",
+      "properties": {
+        "purge_image_versions_offset": {
+          "description": "PurgeImageVersionsOffset is the number of versions to keep.\nEach time a new version is created, the oldest version is purged.\nAllowed values range [1, inf).\n\nDefault value is 2.",
+          "type": "integer"
+        }
+      }
+    },
+    "commons.RunnerImageVersion": {
+      "type": "object",
+      "properties": {
+        "arch": {
+          "description": "Arch is the CPU architecture (x64 or arm64)",
+          "type": "string"
+        },
+        "byoc_ami": {
+          "$ref": "#/definitions/commons.ByocAMI"
+        },
+        "container_runner_image": {
+          "$ref": "#/definitions/commons.ContainerRunnerImageVersion"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "expires_at": {
+          "description": "ExpiresAt is the time at which the runner image version expires.\nThis is only populated for warpbuild snapshot images and the status is\n'available'.",
+          "type": "string"
+        },
+        "external_id": {
+          "description": "ExternalID is the ID of the runner image version in the external system.",
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "meta": {
+          "$ref": "#/definitions/commons.RunnerImageVersionMeta"
+        },
+        "organization_id": {
+          "type": "string"
+        },
+        "os": {
+          "type": "string"
+        },
+        "parent_image_id": {
+          "type": "string"
+        },
+        "root_parent_image_id": {
+          "type": "string"
+        },
+        "runner_image_id": {
+          "type": "string"
+        },
+        "runner_image_pull_secret_id": {
+          "type": "string"
+        },
+        "stack_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "version_time_id": {
+          "type": "integer"
+        },
+        "warpbuild_snapshot_image": {
+          "$ref": "#/definitions/commons.WarpbuildSnapshotImage"
+        }
+      }
+    },
+    "commons.RunnerImageVersionMeta": {
+      "type": "object",
+      "properties": {
+        "event": {},
+        "parsed_event": {}
+      }
+    },
+    "commons.RunnerSetConfiguration": {
+      "type": "object",
+      "properties": {
+        "byoc_sku": {
+          "description": "ByocSku contains BYOC (Bring Your Own Cloud) configuration",
+          "$ref": "#/definitions/commons.ByocSku"
+        },
+        "capacity_type": {
+          "description": "CapacityType specifies spot or on-demand instances",
+          "type": "string",
+          "enum": [
+            "spot",
+            "ondemand"
+          ],
+          "example": "ondemand"
+        },
+        "image": {
+          "description": "Image is the base image for the runner (e.g., ubuntu-2404, macos-14)",
+          "type": "string",
+          "example": "ubuntu-2404"
+        },
+        "sku": {
+          "description": "Sku is the WarpBuild SKU identifier for managed runners",
+          "type": "string",
+          "example": "warp-ubuntu-2404-x64-4x"
+        },
+        "storage": {
+          "description": "Storage contains disk configuration for the runner",
+          "$ref": "#/definitions/commons.Storage"
+        }
+      }
+    },
+    "commons.SetMeta": {
+      "type": "object"
+    },
+    "commons.SetupRunnerInput": {
+      "type": "object",
+      "properties": {
+        "configuration": {
+          "description": "Configuration specifies the hardware and OS settings for the runner",
+          "$ref": "#/definitions/commons.RunnerSetConfiguration"
+        },
+        "labels": {
+          "description": "Labels are custom tags for runner selection in CI workflows",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "warp-ubuntu-2404-x64-4x"
+          ]
+        },
+        "name": {
+          "description": "Name is a unique identifier for the runner within the organization",
+          "type": "string",
+          "example": "my-custom-runner"
+        },
+        "pool_size": {
+          "description": "PoolSize specifies the number of warm pool instances",
+          "type": "integer",
+          "example": 1
+        },
+        "provider_id": {
+          "description": "ProviderId is the stack ID the BYOC runner set provisions into",
+          "type": "string",
+          "example": "cloud_xyz789"
+        },
+        "vcs_integration_id": {
+          "description": "Deprecated: runner sets are organization-global and serve all connected GitHub\norgs; this field is ignored (a server-side value is stamped instead, for rollback\ncompatibility).",
+          "type": "string",
+          "example": "vcs_abc123"
+        }
+      }
+    },
+    "commons.Stack": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "alias": {
+          "type": "string"
+        },
+        "configurations": {
+          "$ref": "#/definitions/commons.StackConfigurations"
+        },
+        "connection_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "kubevirt",
+            "orchard",
+            "gce",
+            "avm",
+            "ec2",
+            "nomad"
+          ]
+        },
+        "last_reconciled_at": {
+          "type": "string"
+        },
+        "latest_version": {
+          "type": "string"
+        },
+        "meta": {
+          "$ref": "#/definitions/commons.KindMeta"
+        },
+        "onboarding_mode": {
+          "type": "string",
+          "enum": [
+            "import",
+            "create"
+          ]
+        },
+        "organization_id": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "pending",
+            "failed"
+          ]
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "commons.StackConfigurations": {
+      "type": "object",
+      "properties": {
+        "avm_configurations": {
+          "$ref": "#/definitions/commons.AVMConfigurations"
+        },
+        "default_tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "ec2_configurations": {
+          "$ref": "#/definitions/commons.EC2Configurations"
+        },
+        "gce_configurations": {
+          "$ref": "#/definitions/commons.GCEConfigurations"
+        },
+        "kubevirt_configurations": {
+          "$ref": "#/definitions/commons.KubevirtConfigurations"
+        },
+        "nomad_configurations": {
+          "$ref": "#/definitions/commons.NomadConfigurations"
+        },
+        "orchard_configurations": {
+          "$ref": "#/definitions/commons.OrchardConfigurations"
+        },
+        "r2_configurations": {
+          "$ref": "#/definitions/commons.R2Configurations"
+        }
+      }
+    },
+    "commons.Storage": {
+      "type": "object",
+      "properties": {
+        "disk_type": {
+          "description": "DiskType is the disk type associated with the instance.\n\nThis is only applicable for GCP based runners for now. Passing this for\nother providers will have no effect.\n\nPossible values:\n\n- pd-standard: Standard persistent disk.\n\n- pd-ssd: SSD persistent disk.\n\n- pd-balanced: Balanced persistent disk.\n\n- pd-extreme: Extreme persistent disk. (to be added later)\n\n- hyperdisk-balanced: Hyperdisk balanced persistent disk.\n\n- hyperdisk-extreme: Hyperdisk extreme persistent disk.\n\nRefer: https://cloud.google.com/compute/docs/disks#disk-types\n\nDefault value is automatically picked if nothing is passed in case of GCP.\n\n+Default: pd-ssd",
+          "type": "string",
+          "enum": [
+            "pd-balanced",
+            "pd-standard",
+            "pd-ssd",
+            "hyperdisk-balanced",
+            "hyperdisk-extreme"
+          ]
+        },
+        "iops": {
+          "description": "IOPS is the provisioned IOPS of the storage.",
+          "type": "integer"
+        },
+        "performance_tier": {
+          "description": "PerformanceTier is the provider specific performance tier of the storage.\nThis is applicable for Azure as of now, can be extended to other providers in the future.\nPassing this for other providers will have no effect.\n\nRefer: https://learn.microsoft.com/en-us/azure/virtual-machines/disks-change-performance\n\nPossible values:\n\n- P15\n- P20\n- P30\n- P40\n- P50\n\nDefault value is automatically picked if nothing is passed in case of Azure.\n\n+Default: P15",
+          "type": "string",
+          "enum": [
+            "P15",
+            "P20",
+            "P30",
+            "P40",
+            "P50"
+          ]
+        },
+        "size": {
+          "type": "integer"
+        },
+        "throughput": {
+          "description": "Throughput is the provisioned throughput of the storage in MiB/s.",
+          "type": "integer"
+        },
+        "tier": {
+          "description": "Tier is the tier of the storage.\n\nIf GCP based, you must set this to custom.",
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "extreme",
+            "custom"
+          ]
+        }
+      }
+    },
+    "commons.TmplParams": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "commons.UpdateRunnerImageInput": {
+      "type": "object",
+      "properties": {
+        "byoc_ami": {
+          "$ref": "#/definitions/commons.ByocAMI"
+        },
+        "container_runner_image": {
+          "$ref": "#/definitions/commons.ContainerRunnerImageUpdate"
+        },
+        "hooks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/commons.RunnerImageHook"
+          }
+        },
+        "id": {
+          "type": "string"
+        },
+        "runner_image_pull_secret_id": {
+          "type": "string"
+        },
+        "settings": {
+          "$ref": "#/definitions/commons.RunnerImageSettings"
+        },
+        "warpbuild_snapshot_image": {
+          "description": "WarpbuildSnapshotImage is the vm image used by warpbuild to run the jobs.\nThis will have the info for internal images managed by warpbuild when\ntype = 'warpbuild_managed'.\n\nIn case of container images, this will have the base image of the VM on\nwhich the container is run.",
+          "$ref": "#/definitions/commons.WarpbuildSnapshotImage"
+        }
+      }
+    },
+    "commons.UpdateRunnerInput": {
+      "type": "object",
+      "properties": {
+        "configuration": {
+          "description": "Configuration specifies the updated hardware and OS settings",
+          "$ref": "#/definitions/commons.RunnerSetConfiguration"
+        },
+        "labels": {
+          "description": "Labels are updated custom tags for runner selection",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "self-hosted",
+            "linux",
+            "x64"
+          ]
+        },
+        "name": {
+          "description": "Name is the new unique identifier for the runner",
+          "type": "string",
+          "example": "updated-runner-name"
+        },
+        "pool_size": {
+          "description": "PoolSize specifies the number of warm pool instances",
+          "type": "integer",
+          "example": 1
+        }
+      }
+    },
+    "commons.WarpbuildImage": {
+      "type": "object",
+      "properties": {
+        "cloud_init_template": {
+          "type": "string"
+        },
+        "image_uri": {
+          "type": "string"
+        }
+      }
+    },
+    "commons.WarpbuildSnapshotImage": {
+      "type": "object",
+      "properties": {
+        "ami_id": {
+          "description": "AMIID is the ID of the AMI.\n\n+OutputOnly",
+          "type": "string"
+        },
+        "creator_runner_instance_id": {
+          "description": "CreatorRunnerInstanceID is the ID of the runner instance that created the snapshot.\nThis is populated via the auth token.\n\n+OutputOnly",
+          "type": "string"
+        },
+        "provider": {
+          "description": "Provider is the cloud provider of the snapshot.\n\n+OutputOnly",
+          "type": "string"
+        },
+        "snapshot_id": {
+          "description": "SnapshotID is the ID of the snapshot.\n\n+OutputOnly",
+          "type": "string"
+        },
+        "vcs_organization_name": {
+          "description": "VCSOrganizationName is the name of the VCS organization.\nThis is populated via the auth token.\n\n+OutputOnly",
+          "type": "string"
+        },
+        "vcs_ref_name": {
+          "description": "VCSRefName is the name of the VCS ref.\nThis is populated via the auth token.\n\n+OutputOnly",
+          "type": "string"
+        },
+        "vcs_repository_name": {
+          "description": "VCSRepositoryName is the name of the VCS repository.\nThis is populated via the auth token.\n\n+OutputOnly",
+          "type": "string"
+        },
+        "version_id": {
+          "description": "VersionID is the ID of the version.\nThis is used when creating a new version of the snapshot.",
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "x-extension-openapi": {
+    "example": "value on a json format"
+  }
+}
