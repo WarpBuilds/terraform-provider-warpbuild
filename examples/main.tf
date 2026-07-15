@@ -25,7 +25,10 @@ resource "warpbuild_runner_image" "custom" {
 resource "warpbuild_runner" "custom" {
   name        = "my-custom-runner"
   provider_id = data.warpbuild_stack.ec2.id
-  pool_size   = 1
+
+  # Warm pool instances kept ready for jobs. Only supported with
+  # capacity_type = "ondemand"; set to 0 to disable the warm pool.
+  pool_size = 1
 
   configuration = {
     capacity_type = "ondemand"
