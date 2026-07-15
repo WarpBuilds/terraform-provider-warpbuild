@@ -417,7 +417,6 @@ func (r *runnerResource) readPoolSize(ctx context.Context, runnerID string) (int
 	return total, diags
 }
 
-
 func expandRunnerConfiguration(ctx context.Context, obj types.Object) (*wbclient.CommonsRunnerSetConfiguration, diag.Diagnostics) {
 	var diags diag.Diagnostics
 	var cfg runnerConfigurationModel
