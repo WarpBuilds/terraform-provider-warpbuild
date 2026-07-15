@@ -43,3 +43,17 @@ resource "warpbuild_runner" "custom" {
     }
   }
 }
+
+# The labels to request this runner with in CI workflows, e.g.
+# `runs-on: my-custom-runner` in GitHub Actions.
+output "runner_labels" {
+  value = warpbuild_runner.custom.labels
+}
+
+output "runner_id" {
+  value = warpbuild_runner.custom.id
+}
+
+output "runner_image_id" {
+  value = warpbuild_runner_image.custom.id
+}
