@@ -24,79 +24,79 @@ import (
 type V1RunnersAPI interface {
 
 	/*
-			DeleteRunner Delete a runner
+		DeleteRunner Delete a runner
 
-			Deletes a runner set from the authenticated organization. This will remove the runner configuration and prevent new instances from being provisioned.
+		Deletes a runner set from the authenticated organization. This will remove the runner configuration and prevent new instances from being provisioned.
 
-		**Warning:** Any running instances associated with this runner will be terminated. This action cannot be undone.
+	**Warning:** Any running instances associated with this runner will be terminated. This action cannot be undone.
 
-		## Code Examples
+	## Code Examples
 
-		### Shell (curl)
+	### Shell (curl)
 
-		```bash
-		curl -X DELETE "https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq" \
-		     -H "Authorization: Bearer <your-api-key>" \
-		     -H "Content-Type: application/json"
-		```
+	```bash
+	curl -X DELETE "https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq" \
+	     -H "Authorization: Bearer <your-api-key>" \
+	     -H "Content-Type: application/json"
+	```
 
-		### Example Response
+	### Example Response
 
-		Returns an empty response with status code `200` on success.
+	Returns an empty response with status code `200` on success.
 
-		```json
-		{}
-		```
+	```json
+	{}
+	```
 
-		### TypeScript
+	### TypeScript
 
-		```typescript
-		const runnerId = 'wzvojxk17eo3s1dq';
+	```typescript
+	const runnerId = 'wzvojxk17eo3s1dq';
 
-		const response = await fetch(
-		  `https://api.warpbuild.com/api/v1/runners/${runnerId}`,
-		  {
-		    method: 'DELETE',
-		    headers: {
-		      'Authorization': 'Bearer <your-api-key>',
-		      'Content-Type': 'application/json'
-		    }
-		  }
-		);
+	const response = await fetch(
+	  `https://api.warpbuild.com/api/v1/runners/${runnerId}`,
+	  {
+	    method: 'DELETE',
+	    headers: {
+	      'Authorization': 'Bearer <your-api-key>',
+	      'Content-Type': 'application/json'
+	    }
+	  }
+	);
 
-		if (response.ok) {
-		  console.log(`Runner ${runnerId} deleted successfully`);
-		} else {
-		  const error = await response.json();
-		  console.error(`Failed to delete runner: ${error.message}`);
-		}
-		```
+	if (response.ok) {
+	  console.log(`Runner ${runnerId} deleted successfully`);
+	} else {
+	  const error = await response.json();
+	  console.error(`Failed to delete runner: ${error.message}`);
+	}
+	```
 
-		### Python
+	### Python
 
-		```python
-		import requests
+	```python
+	import requests
 
-		runner_id = 'wzvojxk17eo3s1dq'
+	runner_id = 'wzvojxk17eo3s1dq'
 
-		response = requests.delete(
-		    f'https://api.warpbuild.com/api/v1/runners/{runner_id}',
-		    headers={
-		        'Authorization': 'Bearer <your-api-key>',
-		        'Content-Type': 'application/json'
-		    }
-		)
+	response = requests.delete(
+	    f'https://api.warpbuild.com/api/v1/runners/{runner_id}',
+	    headers={
+	        'Authorization': 'Bearer <your-api-key>',
+	        'Content-Type': 'application/json'
+	    }
+	)
 
-		if response.status_code == 200:
-		    print(f"Runner {runner_id} deleted successfully")
-		else:
-		    print(f"Failed to delete runner: {response.json().get('message')}")
-		```
+	if response.status_code == 200:
+	    print(f"Runner {runner_id} deleted successfully")
+	else:
+	    print(f"Failed to delete runner: {response.json().get('message')}")
+	```
 
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id Runner ID
-			@return ApiDeleteRunnerRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id Runner ID
+		@return ApiDeleteRunnerRequest
 	*/
 	DeleteRunner(ctx context.Context, id string) ApiDeleteRunnerRequest
 
@@ -105,94 +105,94 @@ type V1RunnersAPI interface {
 	DeleteRunnerExecute(r ApiDeleteRunnerRequest) (*CommonsRunner, *http.Response, error)
 
 	/*
-			GetRunner Get runner details
+		GetRunner Get runner details
 
-			Retrieves a specific runner (runner set) by ID. Returns the runner configuration, status, labels, and associated metadata for the authenticated organization.
+		Retrieves a specific runner (runner set) by ID. Returns the runner configuration, status, labels, and associated metadata for the authenticated organization.
 
-		A runner set defines the configuration template for runner instances that will be provisioned when CI/CD jobs request matching labels.
+	A runner set defines the configuration template for runner instances that will be provisioned when CI/CD jobs request matching labels.
 
-		## Code Examples
+	## Code Examples
 
-		### Shell (curl)
+	### Shell (curl)
 
-		```bash
-		curl -X GET "https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq" \
-		     -H "Authorization: Bearer <your-api-key>" \
-		     -H "Content-Type: application/json"
-		```
+	```bash
+	curl -X GET "https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq" \
+	     -H "Authorization: Bearer <your-api-key>" \
+	     -H "Content-Type: application/json"
+	```
 
-		### Example Response
+	### Example Response
 
-		```json
-		{
-		  "id": "wzvojxk17eo3s1dq",
-		  "created_at": "2024-10-09T17:28:02.050974Z",
-		  "updated_at": "2024-10-09T17:28:02.050974Z",
-		  "name": "warpdev-custom-test-custom-image",
-		  "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
-		  "configuration": {
-		    "sku": "4x-x64-w1kkdpjem73cmowh",
-		    "storage": {
-		      "tier": "low",
-		      "size": 150,
-		      "iops": 3200,
-		      "throughput": 250,
-		      "disk_type": "pd-balanced",
-		      "performance_tier": ""
-		    },
-		    "image": "wjqcx6ozzghczk5x",
-		    "capacity_type": "ondemand"
-		  },
-		  "stock_runner_id": null,
-		  "organization_id": "wfmn080eif8rniwq",
-		  "labels": [
-		    "warpdev-custom-test-custom-image"
-		  ],
-		  "active": true,
-		  "provider_id": "",
-		  "meta": {}
-		}
-		```
+	```json
+	{
+	  "id": "wzvojxk17eo3s1dq",
+	  "created_at": "2024-10-09T17:28:02.050974Z",
+	  "updated_at": "2024-10-09T17:28:02.050974Z",
+	  "name": "warpdev-custom-test-custom-image",
+	  "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
+	  "configuration": {
+	    "sku": "4x-x64-w1kkdpjem73cmowh",
+	    "storage": {
+	      "tier": "low",
+	      "size": 150,
+	      "iops": 3200,
+	      "throughput": 250,
+	      "disk_type": "pd-balanced",
+	      "performance_tier": ""
+	    },
+	    "image": "wjqcx6ozzghczk5x",
+	    "capacity_type": "ondemand"
+	  },
+	  "stock_runner_id": null,
+	  "organization_id": "wfmn080eif8rniwq",
+	  "labels": [
+	    "warpdev-custom-test-custom-image"
+	  ],
+	  "active": true,
+	  "provider_id": "",
+	  "meta": {}
+	}
+	```
 
-		### TypeScript
+	### TypeScript
 
-		```typescript
-		const response = await fetch(
-		  'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',
-		  {
-		    method: 'GET',
-		    headers: {
-		      'Authorization': 'Bearer <your-api-key>',
-		      'Content-Type': 'application/json'
-		    }
-		  }
-		);
-		const runner = await response.json();
-		console.log(runner.name); // "warpdev-custom-test-custom-image"
-		console.log(runner.configuration.sku); // "4x-x64-w1kkdpjem73cmowh"
-		```
+	```typescript
+	const response = await fetch(
+	  'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',
+	  {
+	    method: 'GET',
+	    headers: {
+	      'Authorization': 'Bearer <your-api-key>',
+	      'Content-Type': 'application/json'
+	    }
+	  }
+	);
+	const runner = await response.json();
+	console.log(runner.name); // "warpdev-custom-test-custom-image"
+	console.log(runner.configuration.sku); // "4x-x64-w1kkdpjem73cmowh"
+	```
 
-		### Python
+	### Python
 
-		```python
-		import requests
+	```python
+	import requests
 
-		response = requests.get(
-		    'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',
-		    headers={
-		        'Authorization': 'Bearer <your-api-key>',
-		        'Content-Type': 'application/json'
-		    }
-		)
-		runner = response.json()
-		print(runner['name'])  # "warpdev-custom-test-custom-image"
-		print(runner['configuration']['sku'])  # "4x-x64-w1kkdpjem73cmowh"
-		```
+	response = requests.get(
+	    'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',
+	    headers={
+	        'Authorization': 'Bearer <your-api-key>',
+	        'Content-Type': 'application/json'
+	    }
+	)
+	runner = response.json()
+	print(runner['name'])  # "warpdev-custom-test-custom-image"
+	print(runner['configuration']['sku'])  # "4x-x64-w1kkdpjem73cmowh"
+	```
 
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id Runner ID
-			@return ApiGetRunnerRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id Runner ID
+		@return ApiGetRunnerRequest
 	*/
 	GetRunner(ctx context.Context, id string) ApiGetRunnerRequest
 
@@ -201,160 +201,160 @@ type V1RunnersAPI interface {
 	GetRunnerExecute(r ApiGetRunnerRequest) (*CommonsRunner, *http.Response, error)
 
 	/*
-			ListRunners List runners
+		ListRunners List runners
 
-			Lists all runner sets for the authenticated organization. Runner sets define the configuration templates for runner instances that will be provisioned when CI/CD jobs request matching labels.
+		Lists all runner sets for the authenticated organization. Runner sets define the configuration templates for runner instances that will be provisioned when CI/CD jobs request matching labels.
 
-		You can filter the results by image, provider, VCS integration, and other criteria using query parameters.
+	You can filter the results by image, provider, VCS integration, and other criteria using query parameters.
 
-		## Code Examples
+	## Code Examples
 
-		### Shell (curl)
+	### Shell (curl)
 
-		```bash
-		# List all runners
-		curl -X GET "https://api.warpbuild.com/api/v1/runners" \
-		     -H "Authorization: Bearer <your-api-key>" \
-		     -H "Content-Type: application/json"
+	```bash
+	# List all runners
+	curl -X GET "https://api.warpbuild.com/api/v1/runners" \
+	     -H "Authorization: Bearer <your-api-key>" \
+	     -H "Content-Type: application/json"
 
-		# List runners with filters
-		curl -X GET "https://api.warpbuild.com/api/v1/runners?image=ubuntu-2204&active=true" \
-		     -H "Authorization: Bearer <your-api-key>" \
-		     -H "Content-Type: application/json"
-		```
+	# List runners with filters
+	curl -X GET "https://api.warpbuild.com/api/v1/runners?image=ubuntu-2204&active=true" \
+	     -H "Authorization: Bearer <your-api-key>" \
+	     -H "Content-Type: application/json"
+	```
 
-		### Example Response
+	### Example Response
 
-		```json
-		[
-		  {
-		    "id": "wzvojxk17eo3s1dq",
-		    "created_at": "2024-10-09T17:28:02.050974Z",
-		    "updated_at": "2024-10-09T17:28:02.050974Z",
-		    "name": "warpdev-custom-test-custom-image",
-		    "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
-		    "configuration": {
-		      "sku": "4x-x64-w1kkdpjem73cmowh",
-		      "storage": {
-		        "tier": "low",
-		        "size": 150,
-		        "iops": 3200,
-		        "throughput": 250,
-		        "disk_type": "pd-balanced",
-		        "performance_tier": ""
-		      },
-		      "image": "wjqcx6ozzghczk5x",
-		      "capacity_type": "ondemand"
-		    },
-		    "stock_runner_id": null,
-		    "organization_id": "wfmn080eif8rniwq",
-		    "labels": [
-		      "warpdev-custom-test-custom-image"
-		    ],
-		    "active": true,
-		    "provider_id": "",
-		    "meta": {}
-		  },
-		  {
-		    "id": "ws61znyfcp3mh95j",
-		    "created_at": "2024-10-25T06:32:50.900502Z",
-		    "updated_at": "2024-10-25T06:32:50.900502Z",
-		    "name": "warpdev-ubuntu-2204-x64-8x",
-		    "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
-		    "configuration": {
-		      "sku": "8x-x64-w80f032rccrc9nh2",
-		      "storage": {
-		        "tier": "custom",
-		        "size": 256,
-		        "iops": 6666,
-		        "throughput": 444,
-		        "disk_type": "",
-		        "performance_tier": "P30"
-		      },
-		      "image": "ubuntu-2204",
-		      "capacity_type": "ondemand"
-		    },
-		    "stock_runner_id": "stock-8x-x64-w80f032rccrc9nh2-VGcq1lK9Oa",
-		    "organization_id": "wfmn080eif8rniwq",
-		    "labels": [
-		      "warpdev-ubuntu-2204-x64-8x"
-		    ],
-		    "active": true,
-		    "provider_id": null,
-		    "meta": {}
-		  }
-		]
-		```
+	```json
+	[
+	  {
+	    "id": "wzvojxk17eo3s1dq",
+	    "created_at": "2024-10-09T17:28:02.050974Z",
+	    "updated_at": "2024-10-09T17:28:02.050974Z",
+	    "name": "warpdev-custom-test-custom-image",
+	    "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
+	    "configuration": {
+	      "sku": "4x-x64-w1kkdpjem73cmowh",
+	      "storage": {
+	        "tier": "low",
+	        "size": 150,
+	        "iops": 3200,
+	        "throughput": 250,
+	        "disk_type": "pd-balanced",
+	        "performance_tier": ""
+	      },
+	      "image": "wjqcx6ozzghczk5x",
+	      "capacity_type": "ondemand"
+	    },
+	    "stock_runner_id": null,
+	    "organization_id": "wfmn080eif8rniwq",
+	    "labels": [
+	      "warpdev-custom-test-custom-image"
+	    ],
+	    "active": true,
+	    "provider_id": "",
+	    "meta": {}
+	  },
+	  {
+	    "id": "ws61znyfcp3mh95j",
+	    "created_at": "2024-10-25T06:32:50.900502Z",
+	    "updated_at": "2024-10-25T06:32:50.900502Z",
+	    "name": "warpdev-ubuntu-2204-x64-8x",
+	    "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
+	    "configuration": {
+	      "sku": "8x-x64-w80f032rccrc9nh2",
+	      "storage": {
+	        "tier": "custom",
+	        "size": 256,
+	        "iops": 6666,
+	        "throughput": 444,
+	        "disk_type": "",
+	        "performance_tier": "P30"
+	      },
+	      "image": "ubuntu-2204",
+	      "capacity_type": "ondemand"
+	    },
+	    "stock_runner_id": "stock-8x-x64-w80f032rccrc9nh2-VGcq1lK9Oa",
+	    "organization_id": "wfmn080eif8rniwq",
+	    "labels": [
+	      "warpdev-ubuntu-2204-x64-8x"
+	    ],
+	    "active": true,
+	    "provider_id": null,
+	    "meta": {}
+	  }
+	]
+	```
 
-		### TypeScript
+	### TypeScript
 
-		```typescript
-		// List all runners
-		const response = await fetch(
-		  'https://api.warpbuild.com/api/v1/runners',
-		  {
-		    method: 'GET',
-		    headers: {
-		      'Authorization': 'Bearer <your-api-key>',
-		      'Content-Type': 'application/json'
-		    }
-		  }
-		);
-		const runners = await response.json();
-		console.log(`Found ${runners.length} runners`);
+	```typescript
+	// List all runners
+	const response = await fetch(
+	  'https://api.warpbuild.com/api/v1/runners',
+	  {
+	    method: 'GET',
+	    headers: {
+	      'Authorization': 'Bearer <your-api-key>',
+	      'Content-Type': 'application/json'
+	    }
+	  }
+	);
+	const runners = await response.json();
+	console.log(`Found ${runners.length} runners`);
 
-		// List runners with filters
-		const params = new URLSearchParams({
-		  image: 'ubuntu-2204',
-		  active: 'true'
-		});
-		const filteredResponse = await fetch(
-		  `https://api.warpbuild.com/api/v1/runners?${params}`,
-		  {
-		    method: 'GET',
-		    headers: {
-		      'Authorization': 'Bearer <your-api-key>',
-		      'Content-Type': 'application/json'
-		    }
-		  }
-		);
-		const filteredRunners = await filteredResponse.json();
-		```
+	// List runners with filters
+	const params = new URLSearchParams({
+	  image: 'ubuntu-2204',
+	  active: 'true'
+	});
+	const filteredResponse = await fetch(
+	  `https://api.warpbuild.com/api/v1/runners?${params}`,
+	  {
+	    method: 'GET',
+	    headers: {
+	      'Authorization': 'Bearer <your-api-key>',
+	      'Content-Type': 'application/json'
+	    }
+	  }
+	);
+	const filteredRunners = await filteredResponse.json();
+	```
 
-		### Python
+	### Python
 
-		```python
-		import requests
+	```python
+	import requests
 
-		# List all runners
-		response = requests.get(
-		    'https://api.warpbuild.com/api/v1/runners',
-		    headers={
-		        'Authorization': 'Bearer <your-api-key>',
-		        'Content-Type': 'application/json'
-		    }
-		)
-		runners = response.json()
-		print(f"Found {len(runners)} runners")
+	# List all runners
+	response = requests.get(
+	    'https://api.warpbuild.com/api/v1/runners',
+	    headers={
+	        'Authorization': 'Bearer <your-api-key>',
+	        'Content-Type': 'application/json'
+	    }
+	)
+	runners = response.json()
+	print(f"Found {len(runners)} runners")
 
-		# List runners with filters
-		filtered_response = requests.get(
-		    'https://api.warpbuild.com/api/v1/runners',
-		    params={
-		        'image': 'ubuntu-2204',
-		        'active': True
-		    },
-		    headers={
-		        'Authorization': 'Bearer <your-api-key>',
-		        'Content-Type': 'application/json'
-		    }
-		)
-		filtered_runners = filtered_response.json()
-		```
+	# List runners with filters
+	filtered_response = requests.get(
+	    'https://api.warpbuild.com/api/v1/runners',
+	    params={
+	        'image': 'ubuntu-2204',
+	        'active': True
+	    },
+	    headers={
+	        'Authorization': 'Bearer <your-api-key>',
+	        'Content-Type': 'application/json'
+	    }
+	)
+	filtered_runners = filtered_response.json()
+	```
 
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiListRunnersRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListRunnersRequest
 	*/
 	ListRunners(ctx context.Context) ApiListRunnersRequest
 
@@ -363,474 +363,474 @@ type V1RunnersAPI interface {
 	ListRunnersExecute(r ApiListRunnersRequest) ([]CommonsRunner, *http.Response, error)
 
 	/*
-			SetupRunner Create a new runner
+		SetupRunner Create a new runner
 
-			Creates a new runner set for the authenticated organization. A runner set defines the configuration template for runner instances that will be provisioned when CI/CD jobs request matching labels.
+		Creates a new runner set for the authenticated organization. A runner set defines the configuration template for runner instances that will be provisioned when CI/CD jobs request matching labels.
 
-		You can create different types of runners:
-		- **Stock runners**: WarpBuild managed runners with pre-configured images
-		- **Custom runners**: Bring Your Own Cloud (BYOC) runners on AWS EC2, GCP, or Azure
-		- **Custom image runners**: Runners with custom container images or custom AMIs
+	You can create different types of runners:
+	- **Stock runners**: WarpBuild managed runners with pre-configured images
+	- **Custom runners**: Bring Your Own Cloud (BYOC) runners on AWS EC2, GCP, or Azure
+	- **Custom image runners**: Runners with custom container images or custom AMIs
 
-		## Code Examples
+	## Code Examples
 
-		### 1. Create a Stock Runner (WarpBuild Managed)
+	### 1. Create a Stock Runner (WarpBuild Managed)
 
-		Stock runners use WarpBuild's managed infrastructure with pre-configured images.
+	Stock runners use WarpBuild's managed infrastructure with pre-configured images.
 
-		#### Shell (curl)
+	#### Shell (curl)
 
-		```bash
-		curl -X POST "https://api.warpbuild.com/api/v1/runners" \
-		     -H "Authorization: Bearer <your-api-key>" \
-		     -H "Content-Type: application/json" \
-		     -d '{
-		       "name": "my-ubuntu-runner-8x",
-		       "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
-		       "labels": ["my-ubuntu-runner-8x"],
-		       "configuration": {
-		         "sku": "8x-x64-w80f032rccrc9nh2",
-		         "image": "ubuntu-2204",
-		         "capacity_type": "ondemand",
-		         "storage": {
-		           "tier": "medium",
-		           "size": 150
-		         }
-		       }
-		     }'
-		```
+	```bash
+	curl -X POST "https://api.warpbuild.com/api/v1/runners" \
+	     -H "Authorization: Bearer <your-api-key>" \
+	     -H "Content-Type: application/json" \
+	     -d '{
+	       "name": "my-ubuntu-runner-8x",
+	       "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
+	       "labels": ["my-ubuntu-runner-8x"],
+	       "configuration": {
+	         "sku": "8x-x64-w80f032rccrc9nh2",
+	         "image": "ubuntu-2204",
+	         "capacity_type": "ondemand",
+	         "storage": {
+	           "tier": "medium",
+	           "size": 150
+	         }
+	       }
+	     }'
+	```
 
-		#### Example Response
+	#### Example Response
 
-		```json
-		{
-		  "id": "wnewrunner12345",
-		  "created_at": "2024-12-25T10:00:00.000000Z",
-		  "updated_at": "2024-12-25T10:00:00.000000Z",
-		  "name": "my-ubuntu-runner-8x",
-		  "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
-		  "configuration": {
-		    "sku": "8x-x64-w80f032rccrc9nh2",
-		    "storage": {
-		      "tier": "medium",
-		      "size": 150,
-		      "iops": 3000,
-		      "throughput": 125,
-		      "disk_type": "",
-		      "performance_tier": ""
-		    },
-		    "image": "ubuntu-2204",
-		    "capacity_type": "ondemand"
-		  },
-		  "stock_runner_id": "stock-8x-x64-w80f032rccrc9nh2-ABC123",
-		  "organization_id": "wfmn080eif8rniwq",
-		  "labels": ["my-ubuntu-runner-8x"],
-		  "active": true,
-		  "provider_id": null,
-		  "meta": {}
-		}
-		```
+	```json
+	{
+	  "id": "wnewrunner12345",
+	  "created_at": "2024-12-25T10:00:00.000000Z",
+	  "updated_at": "2024-12-25T10:00:00.000000Z",
+	  "name": "my-ubuntu-runner-8x",
+	  "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
+	  "configuration": {
+	    "sku": "8x-x64-w80f032rccrc9nh2",
+	    "storage": {
+	      "tier": "medium",
+	      "size": 150,
+	      "iops": 3000,
+	      "throughput": 125,
+	      "disk_type": "",
+	      "performance_tier": ""
+	    },
+	    "image": "ubuntu-2204",
+	    "capacity_type": "ondemand"
+	  },
+	  "stock_runner_id": "stock-8x-x64-w80f032rccrc9nh2-ABC123",
+	  "organization_id": "wfmn080eif8rniwq",
+	  "labels": ["my-ubuntu-runner-8x"],
+	  "active": true,
+	  "provider_id": null,
+	  "meta": {}
+	}
+	```
 
-		#### TypeScript
+	#### TypeScript
 
-		```typescript
-		const response = await fetch(
-		  'https://api.warpbuild.com/api/v1/runners',
-		  {
-		    method: 'POST',
-		    headers: {
-		      'Authorization': 'Bearer <your-api-key>',
-		      'Content-Type': 'application/json'
-		    },
-		    body: JSON.stringify({
-		      name: 'my-ubuntu-runner-8x',
-		      vcs_integration_id: 'gh-wc0y0ob3oqymfsmj',
-		      labels: ['my-ubuntu-runner-8x'],
-		      configuration: {
-		        sku: '8x-x64-w80f032rccrc9nh2',
-		        image: 'ubuntu-2204',
-		        capacity_type: 'ondemand',
-		        storage: {
-		          tier: 'medium',
-		          size: 150
-		        }
-		      }
-		    })
-		  }
-		);
-		const runner = await response.json();
-		console.log(`Created runner: ${runner.id}`);
-		```
+	```typescript
+	const response = await fetch(
+	  'https://api.warpbuild.com/api/v1/runners',
+	  {
+	    method: 'POST',
+	    headers: {
+	      'Authorization': 'Bearer <your-api-key>',
+	      'Content-Type': 'application/json'
+	    },
+	    body: JSON.stringify({
+	      name: 'my-ubuntu-runner-8x',
+	      vcs_integration_id: 'gh-wc0y0ob3oqymfsmj',
+	      labels: ['my-ubuntu-runner-8x'],
+	      configuration: {
+	        sku: '8x-x64-w80f032rccrc9nh2',
+	        image: 'ubuntu-2204',
+	        capacity_type: 'ondemand',
+	        storage: {
+	          tier: 'medium',
+	          size: 150
+	        }
+	      }
+	    })
+	  }
+	);
+	const runner = await response.json();
+	console.log(`Created runner: ${runner.id}`);
+	```
 
-		#### Python
+	#### Python
 
-		```python
-		import requests
+	```python
+	import requests
 
-		response = requests.post(
-		    'https://api.warpbuild.com/api/v1/runners',
-		    headers={
-		        'Authorization': 'Bearer <your-api-key>',
-		        'Content-Type': 'application/json'
-		    },
-		    json={
-		        'name': 'my-ubuntu-runner-8x',
-		        'vcs_integration_id': 'gh-wc0y0ob3oqymfsmj',
-		        'labels': ['my-ubuntu-runner-8x'],
-		        'configuration': {
-		            'sku': '8x-x64-w80f032rccrc9nh2',
-		            'image': 'ubuntu-2204',
-		            'capacity_type': 'ondemand',
-		            'storage': {
-		                'tier': 'medium',
-		                'size': 150
-		            }
-		        }
-		    }
-		)
-		runner = response.json()
-		print(f"Created runner: {runner['id']}")
-		```
+	response = requests.post(
+	    'https://api.warpbuild.com/api/v1/runners',
+	    headers={
+	        'Authorization': 'Bearer <your-api-key>',
+	        'Content-Type': 'application/json'
+	    },
+	    json={
+	        'name': 'my-ubuntu-runner-8x',
+	        'vcs_integration_id': 'gh-wc0y0ob3oqymfsmj',
+	        'labels': ['my-ubuntu-runner-8x'],
+	        'configuration': {
+	            'sku': '8x-x64-w80f032rccrc9nh2',
+	            'image': 'ubuntu-2204',
+	            'capacity_type': 'ondemand',
+	            'storage': {
+	                'tier': 'medium',
+	                'size': 150
+	            }
+	        }
+	    }
+	)
+	runner = response.json()
+	print(f"Created runner: {runner['id']}")
+	```
 
-		### 2. Create a Custom Runner on GCP (BYOC)
+	### 2. Create a Custom Runner on GCP (BYOC)
 
-		Bring Your Own Cloud runner on Google Cloud Platform using your GCP project.
+	Bring Your Own Cloud runner on Google Cloud Platform using your GCP project.
 
-		#### Shell (curl)
+	#### Shell (curl)
 
-		```bash
-		curl -X POST "https://api.warpbuild.com/api/v1/runners" \
-		     -H "Authorization: Bearer <your-api-key>" \
-		     -H "Content-Type: application/json" \
-		     -d '{
-		       "name": "my-gcp-runner",
-		       "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
-		       "provider_id": "ee7c619a-c68d-47e5-8385-1aac164cb555",
-		       "labels": ["self-hosted", "linux", "x64", "gcp"],
-		       "configuration": {
-		         "image": "ubuntu-2404",
-		         "capacity_type": "spot",
-		         "byoc_sku": {
-		           "arch": "x64",
-		           "is_public": false,
-		           "instance_types": ["n2-standard-4", "n2-standard-8"],
-		           "network_tier": "STANDARD"
-		         },
-		         "storage": {
-		           "tier": "custom",
-		           "size": 200,
-		           "disk_type": "pd-ssd"
-		         }
-		       }
-		     }'
-		```
+	```bash
+	curl -X POST "https://api.warpbuild.com/api/v1/runners" \
+	     -H "Authorization: Bearer <your-api-key>" \
+	     -H "Content-Type: application/json" \
+	     -d '{
+	       "name": "my-gcp-runner",
+	       "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
+	       "provider_id": "ee7c619a-c68d-47e5-8385-1aac164cb555",
+	       "labels": ["self-hosted", "linux", "x64", "gcp"],
+	       "configuration": {
+	         "image": "ubuntu-2404",
+	         "capacity_type": "spot",
+	         "byoc_sku": {
+	           "arch": "x64",
+	           "is_public": false,
+	           "instance_types": ["n2-standard-4", "n2-standard-8"],
+	           "network_tier": "STANDARD"
+	         },
+	         "storage": {
+	           "tier": "custom",
+	           "size": 200,
+	           "disk_type": "pd-ssd"
+	         }
+	       }
+	     }'
+	```
 
-		#### TypeScript
+	#### TypeScript
 
-		```typescript
-		const response = await fetch(
-		  'https://api.warpbuild.com/api/v1/runners',
-		  {
-		    method: 'POST',
-		    headers: {
-		      'Authorization': 'Bearer <your-api-key>',
-		      'Content-Type': 'application/json'
-		    },
-		    body: JSON.stringify({
-		      name: 'my-gcp-runner',
-		      vcs_integration_id: 'gh-wc0y0ob3oqymfsmj',
-		      provider_id: 'ee7c619a-c68d-47e5-8385-1aac164cb555',
-		      labels: ['self-hosted', 'linux', 'x64', 'gcp'],
-		      configuration: {
-		        image: 'ubuntu-2404',
-		        capacity_type: 'spot',
-		        byoc_sku: {
-		          arch: 'x64',
-		          is_public: false,
-		          instance_types: ['n2-standard-4', 'n2-standard-8'],
-		          network_tier: 'STANDARD'
-		        },
-		        storage: {
-		          tier: 'custom',
-		          size: 200,
-		          disk_type: 'pd-ssd'
-		        }
-		      }
-		    })
-		  }
-		);
-		const runner = await response.json();
-		```
+	```typescript
+	const response = await fetch(
+	  'https://api.warpbuild.com/api/v1/runners',
+	  {
+	    method: 'POST',
+	    headers: {
+	      'Authorization': 'Bearer <your-api-key>',
+	      'Content-Type': 'application/json'
+	    },
+	    body: JSON.stringify({
+	      name: 'my-gcp-runner',
+	      vcs_integration_id: 'gh-wc0y0ob3oqymfsmj',
+	      provider_id: 'ee7c619a-c68d-47e5-8385-1aac164cb555',
+	      labels: ['self-hosted', 'linux', 'x64', 'gcp'],
+	      configuration: {
+	        image: 'ubuntu-2404',
+	        capacity_type: 'spot',
+	        byoc_sku: {
+	          arch: 'x64',
+	          is_public: false,
+	          instance_types: ['n2-standard-4', 'n2-standard-8'],
+	          network_tier: 'STANDARD'
+	        },
+	        storage: {
+	          tier: 'custom',
+	          size: 200,
+	          disk_type: 'pd-ssd'
+	        }
+	      }
+	    })
+	  }
+	);
+	const runner = await response.json();
+	```
 
-		#### Python
+	#### Python
 
-		```python
-		import requests
+	```python
+	import requests
 
-		response = requests.post(
-		    'https://api.warpbuild.com/api/v1/runners',
-		    headers={
-		        'Authorization': 'Bearer <your-api-key>',
-		        'Content-Type': 'application/json'
-		    },
-		    json={
-		        'name': 'my-gcp-runner',
-		        'vcs_integration_id': 'gh-wc0y0ob3oqymfsmj',
-		        'provider_id': 'ee7c619a-c68d-47e5-8385-1aac164cb555',
-		        'labels': ['self-hosted', 'linux', 'x64', 'gcp'],
-		        'configuration': {
-		            'image': 'ubuntu-2404',
-		            'capacity_type': 'spot',
-		            'byoc_sku': {
-		                'arch': 'x64',
-		                'is_public': False,
-		                'instance_types': ['n2-standard-4', 'n2-standard-8'],
-		                'network_tier': 'STANDARD'
-		            },
-		            'storage': {
-		                'tier': 'custom',
-		                'size': 200,
-		                'disk_type': 'pd-ssd'
-		            }
-		        }
-		    }
-		)
-		runner = response.json()
-		```
+	response = requests.post(
+	    'https://api.warpbuild.com/api/v1/runners',
+	    headers={
+	        'Authorization': 'Bearer <your-api-key>',
+	        'Content-Type': 'application/json'
+	    },
+	    json={
+	        'name': 'my-gcp-runner',
+	        'vcs_integration_id': 'gh-wc0y0ob3oqymfsmj',
+	        'provider_id': 'ee7c619a-c68d-47e5-8385-1aac164cb555',
+	        'labels': ['self-hosted', 'linux', 'x64', 'gcp'],
+	        'configuration': {
+	            'image': 'ubuntu-2404',
+	            'capacity_type': 'spot',
+	            'byoc_sku': {
+	                'arch': 'x64',
+	                'is_public': False,
+	                'instance_types': ['n2-standard-4', 'n2-standard-8'],
+	                'network_tier': 'STANDARD'
+	            },
+	            'storage': {
+	                'tier': 'custom',
+	                'size': 200,
+	                'disk_type': 'pd-ssd'
+	            }
+	        }
+	    }
+	)
+	runner = response.json()
+	```
 
-		### 3. Create a Custom Runner on Azure (BYOC)
+	### 3. Create a Custom Runner on Azure (BYOC)
 
-		Bring Your Own Cloud runner on Microsoft Azure.
+	Bring Your Own Cloud runner on Microsoft Azure.
 
-		#### Shell (curl)
+	#### Shell (curl)
 
-		```bash
-		curl -X POST "https://api.warpbuild.com/api/v1/runners" \
-		     -H "Authorization: Bearer <your-api-key>" \
-		     -H "Content-Type: application/json" \
-		     -d '{
-		       "name": "my-azure-runner",
-		       "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
-		       "provider_id": "9f77aea2-3162-44b4-b6f0-cdf84ce30a05",
-		       "labels": ["self-hosted", "linux", "x64", "azure"],
-		       "configuration": {
-		         "image": "ubuntu-2404",
-		         "capacity_type": "spot",
-		         "byoc_sku": {
-		           "arch": "x64",
-		           "is_public": false,
-		           "instance_types": ["Standard_D4s_v3", "Standard_D8s_v3"]
-		         },
-		         "storage": {
-		           "tier": "high",
-		           "size": 200,
-		           "performance_tier": "P30"
-		         }
-		       }
-		     }'
-		```
+	```bash
+	curl -X POST "https://api.warpbuild.com/api/v1/runners" \
+	     -H "Authorization: Bearer <your-api-key>" \
+	     -H "Content-Type: application/json" \
+	     -d '{
+	       "name": "my-azure-runner",
+	       "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
+	       "provider_id": "9f77aea2-3162-44b4-b6f0-cdf84ce30a05",
+	       "labels": ["self-hosted", "linux", "x64", "azure"],
+	       "configuration": {
+	         "image": "ubuntu-2404",
+	         "capacity_type": "spot",
+	         "byoc_sku": {
+	           "arch": "x64",
+	           "is_public": false,
+	           "instance_types": ["Standard_D4s_v3", "Standard_D8s_v3"]
+	         },
+	         "storage": {
+	           "tier": "high",
+	           "size": 200,
+	           "performance_tier": "P30"
+	         }
+	       }
+	     }'
+	```
 
-		#### TypeScript
+	#### TypeScript
 
-		```typescript
-		const response = await fetch(
-		  'https://api.warpbuild.com/api/v1/runners',
-		  {
-		    method: 'POST',
-		    headers: {
-		      'Authorization': 'Bearer <your-api-key>',
-		      'Content-Type': 'application/json'
-		    },
-		    body: JSON.stringify({
-		      name: 'my-azure-runner',
-		      vcs_integration_id: 'gh-wc0y0ob3oqymfsmj',
-		      provider_id: '9f77aea2-3162-44b4-b6f0-cdf84ce30a05',
-		      labels: ['self-hosted', 'linux', 'x64', 'azure'],
-		      configuration: {
-		        image: 'ubuntu-2404',
-		        capacity_type: 'spot',
-		        byoc_sku: {
-		          arch: 'x64',
-		          is_public: false,
-		          instance_types: ['Standard_D4s_v3', 'Standard_D8s_v3']
-		        },
-		        storage: {
-		          tier: 'high',
-		          size: 200,
-		          performance_tier: 'P30'
-		        }
-		      }
-		    })
-		  }
-		);
-		const runner = await response.json();
-		```
+	```typescript
+	const response = await fetch(
+	  'https://api.warpbuild.com/api/v1/runners',
+	  {
+	    method: 'POST',
+	    headers: {
+	      'Authorization': 'Bearer <your-api-key>',
+	      'Content-Type': 'application/json'
+	    },
+	    body: JSON.stringify({
+	      name: 'my-azure-runner',
+	      vcs_integration_id: 'gh-wc0y0ob3oqymfsmj',
+	      provider_id: '9f77aea2-3162-44b4-b6f0-cdf84ce30a05',
+	      labels: ['self-hosted', 'linux', 'x64', 'azure'],
+	      configuration: {
+	        image: 'ubuntu-2404',
+	        capacity_type: 'spot',
+	        byoc_sku: {
+	          arch: 'x64',
+	          is_public: false,
+	          instance_types: ['Standard_D4s_v3', 'Standard_D8s_v3']
+	        },
+	        storage: {
+	          tier: 'high',
+	          size: 200,
+	          performance_tier: 'P30'
+	        }
+	      }
+	    })
+	  }
+	);
+	const runner = await response.json();
+	```
 
-		#### Python
+	#### Python
 
-		```python
-		import requests
+	```python
+	import requests
 
-		response = requests.post(
-		    'https://api.warpbuild.com/api/v1/runners',
-		    headers={
-		        'Authorization': 'Bearer <your-api-key>',
-		        'Content-Type': 'application/json'
-		    },
-		    json={
-		        'name': 'my-azure-runner',
-		        'vcs_integration_id': 'gh-wc0y0ob3oqymfsmj',
-		        'provider_id': '9f77aea2-3162-44b4-b6f0-cdf84ce30a05',
-		        'labels': ['self-hosted', 'linux', 'x64', 'azure'],
-		        'configuration': {
-		            'image': 'ubuntu-2404',
-		            'capacity_type': 'spot',
-		            'byoc_sku': {
-		                'arch': 'x64',
-		                'is_public': False,
-		                'instance_types': ['Standard_D4s_v3', 'Standard_D8s_v3']
-		            },
-		            'storage': {
-		                'tier': 'high',
-		                'size': 200,
-		                'performance_tier': 'P30'
-		            }
-		        }
-		    }
-		)
-		runner = response.json()
-		```
+	response = requests.post(
+	    'https://api.warpbuild.com/api/v1/runners',
+	    headers={
+	        'Authorization': 'Bearer <your-api-key>',
+	        'Content-Type': 'application/json'
+	    },
+	    json={
+	        'name': 'my-azure-runner',
+	        'vcs_integration_id': 'gh-wc0y0ob3oqymfsmj',
+	        'provider_id': '9f77aea2-3162-44b4-b6f0-cdf84ce30a05',
+	        'labels': ['self-hosted', 'linux', 'x64', 'azure'],
+	        'configuration': {
+	            'image': 'ubuntu-2404',
+	            'capacity_type': 'spot',
+	            'byoc_sku': {
+	                'arch': 'x64',
+	                'is_public': False,
+	                'instance_types': ['Standard_D4s_v3', 'Standard_D8s_v3']
+	            },
+	            'storage': {
+	                'tier': 'high',
+	                'size': 200,
+	                'performance_tier': 'P30'
+	            }
+	        }
+	    }
+	)
+	runner = response.json()
+	```
 
-		### 4. Create a Custom Runner with Custom Image
+	### 4. Create a Custom Runner with Custom Image
 
-		Runner using a custom container image with a specific SKU.
+	Runner using a custom container image with a specific SKU.
 
-		#### Shell (curl)
+	#### Shell (curl)
 
-		```bash
-		curl -X POST "https://api.warpbuild.com/api/v1/runners" \
-		     -H "Authorization: Bearer <your-api-key>" \
-		     -H "Content-Type: application/json" \
-		     -d '{
-		       "name": "warpdev-custom-test-custom-image",
-		       "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
-		       "labels": ["warpdev-custom-test-custom-image"],
-		       "configuration": {
-		         "sku": "4x-x64-w1kkdpjem73cmowh",
-		         "image": "wjqcx6ozzghczk5x",
-		         "capacity_type": "ondemand",
-		         "storage": {
-		           "tier": "low",
-		           "size": 150,
-		           "iops": 3200,
-		           "throughput": 250,
-		           "disk_type": "pd-balanced"
-		         }
-		       }
-		     }'
-		```
+	```bash
+	curl -X POST "https://api.warpbuild.com/api/v1/runners" \
+	     -H "Authorization: Bearer <your-api-key>" \
+	     -H "Content-Type: application/json" \
+	     -d '{
+	       "name": "warpdev-custom-test-custom-image",
+	       "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
+	       "labels": ["warpdev-custom-test-custom-image"],
+	       "configuration": {
+	         "sku": "4x-x64-w1kkdpjem73cmowh",
+	         "image": "wjqcx6ozzghczk5x",
+	         "capacity_type": "ondemand",
+	         "storage": {
+	           "tier": "low",
+	           "size": 150,
+	           "iops": 3200,
+	           "throughput": 250,
+	           "disk_type": "pd-balanced"
+	         }
+	       }
+	     }'
+	```
 
-		#### Example Response
+	#### Example Response
 
-		```json
-		{
-		  "id": "wzvojxk17eo3s1dq",
-		  "created_at": "2024-10-09T17:28:02.050974Z",
-		  "updated_at": "2024-10-09T17:28:02.050974Z",
-		  "name": "warpdev-custom-test-custom-image",
-		  "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
-		  "configuration": {
-		    "sku": "4x-x64-w1kkdpjem73cmowh",
-		    "storage": {
-		      "tier": "low",
-		      "size": 150,
-		      "iops": 3200,
-		      "throughput": 250,
-		      "disk_type": "pd-balanced",
-		      "performance_tier": ""
-		    },
-		    "image": "wjqcx6ozzghczk5x",
-		    "capacity_type": "ondemand"
-		  },
-		  "stock_runner_id": null,
-		  "organization_id": "wfmn080eif8rniwq",
-		  "labels": [
-		    "warpdev-custom-test-custom-image"
-		  ],
-		  "active": true,
-		  "provider_id": "",
-		  "meta": {}
-		}
-		```
+	```json
+	{
+	  "id": "wzvojxk17eo3s1dq",
+	  "created_at": "2024-10-09T17:28:02.050974Z",
+	  "updated_at": "2024-10-09T17:28:02.050974Z",
+	  "name": "warpdev-custom-test-custom-image",
+	  "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
+	  "configuration": {
+	    "sku": "4x-x64-w1kkdpjem73cmowh",
+	    "storage": {
+	      "tier": "low",
+	      "size": 150,
+	      "iops": 3200,
+	      "throughput": 250,
+	      "disk_type": "pd-balanced",
+	      "performance_tier": ""
+	    },
+	    "image": "wjqcx6ozzghczk5x",
+	    "capacity_type": "ondemand"
+	  },
+	  "stock_runner_id": null,
+	  "organization_id": "wfmn080eif8rniwq",
+	  "labels": [
+	    "warpdev-custom-test-custom-image"
+	  ],
+	  "active": true,
+	  "provider_id": "",
+	  "meta": {}
+	}
+	```
 
-		#### TypeScript
+	#### TypeScript
 
-		```typescript
-		const response = await fetch(
-		  'https://api.warpbuild.com/api/v1/runners',
-		  {
-		    method: 'POST',
-		    headers: {
-		      'Authorization': 'Bearer <your-api-key>',
-		      'Content-Type': 'application/json'
-		    },
-		    body: JSON.stringify({
-		      name: 'warpdev-custom-test-custom-image',
-		      vcs_integration_id: 'gh-wc0y0ob3oqymfsmj',
-		      labels: ['warpdev-custom-test-custom-image'],
-		      configuration: {
-		        sku: '4x-x64-w1kkdpjem73cmowh',
-		        image: 'wjqcx6ozzghczk5x',
-		        capacity_type: 'ondemand',
-		        storage: {
-		          tier: 'low',
-		          size: 150,
-		          iops: 3200,
-		          throughput: 250,
-		          disk_type: 'pd-balanced'
-		        }
-		      }
-		    })
-		  }
-		);
-		const runner = await response.json();
-		```
+	```typescript
+	const response = await fetch(
+	  'https://api.warpbuild.com/api/v1/runners',
+	  {
+	    method: 'POST',
+	    headers: {
+	      'Authorization': 'Bearer <your-api-key>',
+	      'Content-Type': 'application/json'
+	    },
+	    body: JSON.stringify({
+	      name: 'warpdev-custom-test-custom-image',
+	      vcs_integration_id: 'gh-wc0y0ob3oqymfsmj',
+	      labels: ['warpdev-custom-test-custom-image'],
+	      configuration: {
+	        sku: '4x-x64-w1kkdpjem73cmowh',
+	        image: 'wjqcx6ozzghczk5x',
+	        capacity_type: 'ondemand',
+	        storage: {
+	          tier: 'low',
+	          size: 150,
+	          iops: 3200,
+	          throughput: 250,
+	          disk_type: 'pd-balanced'
+	        }
+	      }
+	    })
+	  }
+	);
+	const runner = await response.json();
+	```
 
-		#### Python
+	#### Python
 
-		```python
-		import requests
+	```python
+	import requests
 
-		response = requests.post(
-		    'https://api.warpbuild.com/api/v1/runners',
-		    headers={
-		        'Authorization': 'Bearer <your-api-key>',
-		        'Content-Type': 'application/json'
-		    },
-		    json={
-		        'name': 'warpdev-custom-test-custom-image',
-		        'vcs_integration_id': 'gh-wc0y0ob3oqymfsmj',
-		        'labels': ['warpdev-custom-test-custom-image'],
-		        'configuration': {
-		            'sku': '4x-x64-w1kkdpjem73cmowh',
-		            'image': 'wjqcx6ozzghczk5x',
-		            'capacity_type': 'ondemand',
-		            'storage': {
-		                'tier': 'low',
-		                'size': 150,
-		                'iops': 3200,
-		                'throughput': 250,
-		                'disk_type': 'pd-balanced'
-		            }
-		        }
-		    }
-		)
-		runner = response.json()
-		```
+	response = requests.post(
+	    'https://api.warpbuild.com/api/v1/runners',
+	    headers={
+	        'Authorization': 'Bearer <your-api-key>',
+	        'Content-Type': 'application/json'
+	    },
+	    json={
+	        'name': 'warpdev-custom-test-custom-image',
+	        'vcs_integration_id': 'gh-wc0y0ob3oqymfsmj',
+	        'labels': ['warpdev-custom-test-custom-image'],
+	        'configuration': {
+	            'sku': '4x-x64-w1kkdpjem73cmowh',
+	            'image': 'wjqcx6ozzghczk5x',
+	            'capacity_type': 'ondemand',
+	            'storage': {
+	                'tier': 'low',
+	                'size': 150,
+	                'iops': 3200,
+	                'throughput': 250,
+	                'disk_type': 'pd-balanced'
+	            }
+	        }
+	    }
+	)
+	runner = response.json()
+	```
 
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiSetupRunnerRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiSetupRunnerRequest
 	*/
 	SetupRunner(ctx context.Context) ApiSetupRunnerRequest
 
@@ -839,239 +839,239 @@ type V1RunnersAPI interface {
 	SetupRunnerExecute(r ApiSetupRunnerRequest) (*CommonsRunner, *http.Response, error)
 
 	/*
-			UpdateRunner Update a runner
+		UpdateRunner Update a runner
 
-			Updates an existing runner set configuration. Only the fields specified in the request body will be updated; all other fields remain unchanged.
+		Updates an existing runner set configuration. Only the fields specified in the request body will be updated; all other fields remain unchanged.
 
-		You can update various aspects of a runner including its name, labels, storage configuration, and capacity type.
+	You can update various aspects of a runner including its name, labels, storage configuration, and capacity type.
 
-		## Code Examples
+	## Code Examples
 
-		### 1. Update Runner Labels
+	### 1. Update Runner Labels
 
-		#### Shell (curl)
+	#### Shell (curl)
 
-		```bash
-		curl -X PUT "https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq" \
-		     -H "Authorization: Bearer <your-api-key>" \
-		     -H "Content-Type: application/json" \
-		     -d '{
-		       "labels": ["my-runner", "ubuntu", "x64"]
-		     }'
-		```
+	```bash
+	curl -X PUT "https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq" \
+	     -H "Authorization: Bearer <your-api-key>" \
+	     -H "Content-Type: application/json" \
+	     -d '{
+	       "labels": ["my-runner", "ubuntu", "x64"]
+	     }'
+	```
 
-		#### Example Response
+	#### Example Response
 
-		```json
-		{
-		  "id": "wzvojxk17eo3s1dq",
-		  "created_at": "2024-10-09T17:28:02.050974Z",
-		  "updated_at": "2024-12-25T10:30:00.000000Z",
-		  "name": "warpdev-custom-test-custom-image",
-		  "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
-		  "configuration": {
-		    "sku": "4x-x64-w1kkdpjem73cmowh",
-		    "storage": {
-		      "tier": "low",
-		      "size": 150,
-		      "iops": 3200,
-		      "throughput": 250,
-		      "disk_type": "pd-balanced",
-		      "performance_tier": ""
-		    },
-		    "image": "wjqcx6ozzghczk5x",
-		    "capacity_type": "ondemand"
-		  },
-		  "stock_runner_id": null,
-		  "organization_id": "wfmn080eif8rniwq",
-		  "labels": [
-		    "my-runner",
-		    "ubuntu",
-		    "x64"
-		  ],
-		  "active": true,
-		  "provider_id": "",
-		  "meta": {}
-		}
-		```
+	```json
+	{
+	  "id": "wzvojxk17eo3s1dq",
+	  "created_at": "2024-10-09T17:28:02.050974Z",
+	  "updated_at": "2024-12-25T10:30:00.000000Z",
+	  "name": "warpdev-custom-test-custom-image",
+	  "vcs_integration_id": "gh-wc0y0ob3oqymfsmj",
+	  "configuration": {
+	    "sku": "4x-x64-w1kkdpjem73cmowh",
+	    "storage": {
+	      "tier": "low",
+	      "size": 150,
+	      "iops": 3200,
+	      "throughput": 250,
+	      "disk_type": "pd-balanced",
+	      "performance_tier": ""
+	    },
+	    "image": "wjqcx6ozzghczk5x",
+	    "capacity_type": "ondemand"
+	  },
+	  "stock_runner_id": null,
+	  "organization_id": "wfmn080eif8rniwq",
+	  "labels": [
+	    "my-runner",
+	    "ubuntu",
+	    "x64"
+	  ],
+	  "active": true,
+	  "provider_id": "",
+	  "meta": {}
+	}
+	```
 
-		#### TypeScript
+	#### TypeScript
 
-		```typescript
-		const response = await fetch(
-		  'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',
-		  {
-		    method: 'PUT',
-		    headers: {
-		      'Authorization': 'Bearer <your-api-key>',
-		      'Content-Type': 'application/json'
-		    },
-		    body: JSON.stringify({
-		      labels: ['my-runner', 'ubuntu', 'x64']
-		    })
-		  }
-		);
-		const updatedRunner = await response.json();
-		console.log(`Updated labels: ${updatedRunner.labels.join(', ')}`);
-		```
+	```typescript
+	const response = await fetch(
+	  'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',
+	  {
+	    method: 'PUT',
+	    headers: {
+	      'Authorization': 'Bearer <your-api-key>',
+	      'Content-Type': 'application/json'
+	    },
+	    body: JSON.stringify({
+	      labels: ['my-runner', 'ubuntu', 'x64']
+	    })
+	  }
+	);
+	const updatedRunner = await response.json();
+	console.log(`Updated labels: ${updatedRunner.labels.join(', ')}`);
+	```
 
-		#### Python
+	#### Python
 
-		```python
-		import requests
+	```python
+	import requests
 
-		response = requests.put(
-		    'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',
-		    headers={
-		        'Authorization': 'Bearer <your-api-key>',
-		        'Content-Type': 'application/json'
-		    },
-		    json={
-		        'labels': ['my-runner', 'ubuntu', 'x64']
-		    }
-		)
-		updated_runner = response.json()
-		print(f"Updated labels: {updated_runner['labels']}")
-		```
+	response = requests.put(
+	    'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',
+	    headers={
+	        'Authorization': 'Bearer <your-api-key>',
+	        'Content-Type': 'application/json'
+	    },
+	    json={
+	        'labels': ['my-runner', 'ubuntu', 'x64']
+	    }
+	)
+	updated_runner = response.json()
+	print(f"Updated labels: {updated_runner['labels']}")
+	```
 
-		### 2. Update Runner Configuration
+	### 2. Update Runner Configuration
 
-		#### Shell (curl)
+	#### Shell (curl)
 
-		```bash
-		curl -X PUT "https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq" \
-		     -H "Authorization: Bearer <your-api-key>" \
-		     -H "Content-Type: application/json" \
-		     -d '{
-		       "configuration": {
-		         "sku": "8x-x64-w80f032rccrc9nh2",
-		         "capacity_type": "spot",
-		         "storage": {
-		           "tier": "high",
-		           "size": 200
-		         }
-		       }
-		     }'
-		```
+	```bash
+	curl -X PUT "https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq" \
+	     -H "Authorization: Bearer <your-api-key>" \
+	     -H "Content-Type: application/json" \
+	     -d '{
+	       "configuration": {
+	         "sku": "8x-x64-w80f032rccrc9nh2",
+	         "capacity_type": "spot",
+	         "storage": {
+	           "tier": "high",
+	           "size": 200
+	         }
+	       }
+	     }'
+	```
 
-		#### TypeScript
+	#### TypeScript
 
-		```typescript
-		const response = await fetch(
-		  'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',
-		  {
-		    method: 'PUT',
-		    headers: {
-		      'Authorization': 'Bearer <your-api-key>',
-		      'Content-Type': 'application/json'
-		    },
-		    body: JSON.stringify({
-		      configuration: {
-		        sku: '8x-x64-w80f032rccrc9nh2',
-		        capacity_type: 'spot',
-		        storage: {
-		          tier: 'high',
-		          size: 200
-		        }
-		      }
-		    })
-		  }
-		);
-		const updatedRunner = await response.json();
-		```
+	```typescript
+	const response = await fetch(
+	  'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',
+	  {
+	    method: 'PUT',
+	    headers: {
+	      'Authorization': 'Bearer <your-api-key>',
+	      'Content-Type': 'application/json'
+	    },
+	    body: JSON.stringify({
+	      configuration: {
+	        sku: '8x-x64-w80f032rccrc9nh2',
+	        capacity_type: 'spot',
+	        storage: {
+	          tier: 'high',
+	          size: 200
+	        }
+	      }
+	    })
+	  }
+	);
+	const updatedRunner = await response.json();
+	```
 
-		#### Python
+	#### Python
 
-		```python
-		import requests
+	```python
+	import requests
 
-		response = requests.put(
-		    'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',
-		    headers={
-		        'Authorization': 'Bearer <your-api-key>',
-		        'Content-Type': 'application/json'
-		    },
-		    json={
-		        'configuration': {
-		            'sku': '8x-x64-w80f032rccrc9nh2',
-		            'capacity_type': 'spot',
-		            'storage': {
-		                'tier': 'high',
-		                'size': 200
-		            }
-		        }
-		    }
-		)
-		updated_runner = response.json()
-		```
+	response = requests.put(
+	    'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',
+	    headers={
+	        'Authorization': 'Bearer <your-api-key>',
+	        'Content-Type': 'application/json'
+	    },
+	    json={
+	        'configuration': {
+	            'sku': '8x-x64-w80f032rccrc9nh2',
+	            'capacity_type': 'spot',
+	            'storage': {
+	                'tier': 'high',
+	                'size': 200
+	            }
+	        }
+	    }
+	)
+	updated_runner = response.json()
+	```
 
-		### 3. Enable/Disable Runner
+	### 3. Enable/Disable Runner
 
-		#### Shell (curl)
+	#### Shell (curl)
 
-		```bash
-		# Disable a runner
-		curl -X PUT "https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq" \
-		     -H "Authorization: Bearer <your-api-key>" \
-		     -H "Content-Type: application/json" \
-		     -d '{
-		       "active": false
-		     }'
+	```bash
+	# Disable a runner
+	curl -X PUT "https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq" \
+	     -H "Authorization: Bearer <your-api-key>" \
+	     -H "Content-Type: application/json" \
+	     -d '{
+	       "active": false
+	     }'
 
-		# Re-enable a runner
-		curl -X PUT "https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq" \
-		     -H "Authorization: Bearer <your-api-key>" \
-		     -H "Content-Type: application/json" \
-		     -d '{
-		       "active": true
-		     }'
-		```
+	# Re-enable a runner
+	curl -X PUT "https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq" \
+	     -H "Authorization: Bearer <your-api-key>" \
+	     -H "Content-Type: application/json" \
+	     -d '{
+	       "active": true
+	     }'
+	```
 
-		#### TypeScript
+	#### TypeScript
 
-		```typescript
-		// Disable a runner
-		const response = await fetch(
-		  'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',
-		  {
-		    method: 'PUT',
-		    headers: {
-		      'Authorization': 'Bearer <your-api-key>',
-		      'Content-Type': 'application/json'
-		    },
-		    body: JSON.stringify({
-		      active: false
-		    })
-		  }
-		);
-		const updatedRunner = await response.json();
-		console.log(`Runner active: ${updatedRunner.active}`);
-		```
+	```typescript
+	// Disable a runner
+	const response = await fetch(
+	  'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',
+	  {
+	    method: 'PUT',
+	    headers: {
+	      'Authorization': 'Bearer <your-api-key>',
+	      'Content-Type': 'application/json'
+	    },
+	    body: JSON.stringify({
+	      active: false
+	    })
+	  }
+	);
+	const updatedRunner = await response.json();
+	console.log(`Runner active: ${updatedRunner.active}`);
+	```
 
-		#### Python
+	#### Python
 
-		```python
-		import requests
+	```python
+	import requests
 
-		# Disable a runner
-		response = requests.put(
-		    'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',
-		    headers={
-		        'Authorization': 'Bearer <your-api-key>',
-		        'Content-Type': 'application/json'
-		    },
-		    json={
-		        'active': False
-		    }
-		)
-		updated_runner = response.json()
-		print(f"Runner active: {updated_runner['active']}")
-		```
+	# Disable a runner
+	response = requests.put(
+	    'https://api.warpbuild.com/api/v1/runners/wzvojxk17eo3s1dq',
+	    headers={
+	        'Authorization': 'Bearer <your-api-key>',
+	        'Content-Type': 'application/json'
+	    },
+	    json={
+	        'active': False
+	    }
+	)
+	updated_runner = response.json()
+	print(f"Runner active: {updated_runner['active']}")
+	```
 
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id Runner ID
-			@return ApiUpdateRunnerRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id Runner ID
+		@return ApiUpdateRunnerRequest
 	*/
 	UpdateRunner(ctx context.Context, id string) ApiUpdateRunnerRequest
 

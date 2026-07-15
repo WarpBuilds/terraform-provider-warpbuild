@@ -1263,6 +1263,11 @@
           "type": "string",
           "example": "org_abc123"
         },
+        "pool_size": {
+          "description": "PoolSize is the number of warm pool instances. Populated on the public\nGET /runners endpoints; 0 when the runner has no warm pool.",
+          "type": "integer",
+          "example": 1
+        },
         "provider_id": {
           "description": "ProviderId is the stack ID the BYOC runner set provisions into",
           "type": "string",

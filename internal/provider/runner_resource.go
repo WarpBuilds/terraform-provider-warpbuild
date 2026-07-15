@@ -418,6 +418,11 @@ func (r *runnerResource) setState(ctx context.Context, m *runnerResourceModel, r
 	m.ID = types.StringPointerValue(runner.Id)
 	m.Name = types.StringPointerValue(runner.Name)
 	m.ProviderID = types.StringPointerValue(runner.ProviderId)
+	// pool_size is only returned by API versions that include the batched
+	// pool lookup; keep the planned/imported value when absent.
+	if runner.PoolSize != nil {
+		m.PoolSize = types.Int64Value(int64(*runner.PoolSize))
+	}
 
 	labels, d := types.SetValueFrom(ctx, types.StringType, runner.Labels)
 	diags.Append(d...)
