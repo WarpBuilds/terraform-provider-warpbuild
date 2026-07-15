@@ -201,6 +201,120 @@ type V1RunnersAPI interface {
 	GetRunnerExecute(r ApiGetRunnerRequest) (*CommonsRunner, *http.Response, error)
 
 	/*
+		ListRunnerPools List runner pools
+
+		Lists all runner pools for the authenticated organization. Runner pools allow you to configure warm pools of pre-provisioned runner instances for faster job startup times.
+
+	A pool maintains a specified number of idle runner instances ready to be allocated immediately when a job is queued.
+
+	## Code Examples
+
+	### Shell (curl)
+
+	```bash
+	curl -X GET "https://api.warpbuild.com/api/v1/runner_pool" \
+	     -H "Authorization: Bearer <your-api-key>" \
+	     -H "Content-Type: application/json"
+	```
+
+	### Example Response
+
+	```json
+	{
+	  "items": [
+	    {
+	      "id": "w7ifgep3raad86r0",
+	      "created_at": "2024-11-11T05:26:58.235252Z",
+	      "updated_at": "2024-11-11T05:41:13.474687Z",
+	      "runner_set_id": "wy3i9dbgh94op3gt",
+	      "provider": null,
+	      "size": 0
+	    },
+	    {
+	      "id": "wd2pxg6lr8b34sw7",
+	      "created_at": "2024-11-11T04:58:16.109951Z",
+	      "updated_at": "2024-11-14T03:51:07.442081Z",
+	      "runner_set_id": "w52c7ixv0wdfkk8p",
+	      "provider": null,
+	      "size": 0
+	    },
+	    {
+	      "id": "wux7zvuiqh5qcga3",
+	      "created_at": "2025-11-12T11:04:23.193047Z",
+	      "updated_at": "2025-11-12T11:04:23.193047Z",
+	      "runner_set_id": "wmqael8cofj04f12",
+	      "provider": null,
+	      "size": 2
+	    }
+	  ]
+	}
+	```
+
+	### TypeScript
+
+	```typescript
+	const response = await fetch(
+	  'https://api.warpbuild.com/api/v1/runner_pool',
+	  {
+	    method: 'GET',
+	    headers: {
+	      'Authorization': 'Bearer <your-api-key>',
+	      'Content-Type': 'application/json'
+	    }
+	  }
+	);
+	const data = await response.json();
+	console.log(`Found ${data.items.length} runner pools`);
+
+	// Find pools with active instances
+	const activePools = data.items.filter(pool => pool.size > 0);
+	console.log(`Pools with warm instances: ${activePools.length}`);
+
+	// Total warm instances
+	const totalWarm = data.items.reduce((sum, pool) => sum + pool.size, 0);
+	console.log(`Total warm instances: ${totalWarm}`);
+	```
+
+	### Python
+
+	```python
+	import requests
+
+	response = requests.get(
+	    'https://api.warpbuild.com/api/v1/runner_pool',
+	    headers={
+	        'Authorization': 'Bearer <your-api-key>',
+	        'Content-Type': 'application/json'
+	    }
+	)
+	data = response.json()
+	pools = data['items']
+	print(f"Found {len(pools)} runner pools")
+
+	# Find pools with active instances
+	active_pools = [pool for pool in pools if pool['size'] > 0]
+	print(f"Pools with warm instances: {len(active_pools)}")
+
+	# Total warm instances
+	total_warm = sum(pool['size'] for pool in pools)
+	print(f"Total warm instances: {total_warm}")
+
+	# List pool details
+	for pool in pools:
+	    print(f"  Pool {pool['id']}: runner_set={pool['runner_set_id']}, size={pool['size']}")
+	```
+
+
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListRunnerPoolsRequest
+	*/
+	ListRunnerPools(ctx context.Context) ApiListRunnerPoolsRequest
+
+	// ListRunnerPoolsExecute executes the request
+	//  @return CommonsPoolListOutput
+	ListRunnerPoolsExecute(r ApiListRunnerPoolsRequest) (*CommonsPoolListOutput, *http.Response, error)
+
+	/*
 		ListRunners List runners
 
 		Lists all runner sets for the authenticated organization. Runner sets define the configuration templates for runner instances that will be provisioned when CI/CD jobs request matching labels.
@@ -1483,6 +1597,234 @@ func (a *V1RunnersAPIService) GetRunnerExecute(r ApiGetRunnerRequest) (*CommonsR
 			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiListRunnerPoolsRequest struct {
+	ctx         context.Context
+	ApiService  V1RunnersAPI
+	runnerSetId *string
+}
+
+// runner set id
+func (r ApiListRunnerPoolsRequest) RunnerSetId(runnerSetId string) ApiListRunnerPoolsRequest {
+	r.runnerSetId = &runnerSetId
+	return r
+}
+
+func (r ApiListRunnerPoolsRequest) Execute() (*CommonsPoolListOutput, *http.Response, error) {
+	return r.ApiService.ListRunnerPoolsExecute(r)
+}
+
+/*
+ListRunnerPools List runner pools
+
+Lists all runner pools for the authenticated organization. Runner pools allow you to configure warm pools of pre-provisioned runner instances for faster job startup times.
+
+A pool maintains a specified number of idle runner instances ready to be allocated immediately when a job is queued.
+
+## Code Examples
+
+### Shell (curl)
+
+```bash
+
+	curl -X GET "https://api.warpbuild.com/api/v1/runner_pool" \
+	     -H "Authorization: Bearer <your-api-key>" \
+	     -H "Content-Type: application/json"
+
+```
+
+### Example Response
+
+```json
+
+	{
+	  "items": [
+	    {
+	      "id": "w7ifgep3raad86r0",
+	      "created_at": "2024-11-11T05:26:58.235252Z",
+	      "updated_at": "2024-11-11T05:41:13.474687Z",
+	      "runner_set_id": "wy3i9dbgh94op3gt",
+	      "provider": null,
+	      "size": 0
+	    },
+	    {
+	      "id": "wd2pxg6lr8b34sw7",
+	      "created_at": "2024-11-11T04:58:16.109951Z",
+	      "updated_at": "2024-11-14T03:51:07.442081Z",
+	      "runner_set_id": "w52c7ixv0wdfkk8p",
+	      "provider": null,
+	      "size": 0
+	    },
+	    {
+	      "id": "wux7zvuiqh5qcga3",
+	      "created_at": "2025-11-12T11:04:23.193047Z",
+	      "updated_at": "2025-11-12T11:04:23.193047Z",
+	      "runner_set_id": "wmqael8cofj04f12",
+	      "provider": null,
+	      "size": 2
+	    }
+	  ]
+	}
+
+```
+
+### TypeScript
+
+```typescript
+const response = await fetch(
+
+	'https://api.warpbuild.com/api/v1/runner_pool',
+	{
+	  method: 'GET',
+	  headers: {
+	    'Authorization': 'Bearer <your-api-key>',
+	    'Content-Type': 'application/json'
+	  }
+	}
+
+);
+const data = await response.json();
+console.log(`Found ${data.items.length} runner pools`);
+
+// Find pools with active instances
+const activePools = data.items.filter(pool => pool.size > 0);
+console.log(`Pools with warm instances: ${activePools.length}`);
+
+// Total warm instances
+const totalWarm = data.items.reduce((sum, pool) => sum + pool.size, 0);
+console.log(`Total warm instances: ${totalWarm}`);
+```
+
+### Python
+
+```python
+import requests
+
+response = requests.get(
+
+	'https://api.warpbuild.com/api/v1/runner_pool',
+	headers={
+	    'Authorization': 'Bearer <your-api-key>',
+	    'Content-Type': 'application/json'
+	}
+
+)
+data = response.json()
+pools = data['items']
+print(f"Found {len(pools)} runner pools")
+
+# Find pools with active instances
+active_pools = [pool for pool in pools if pool['size'] > 0]
+print(f"Pools with warm instances: {len(active_pools)}")
+
+# Total warm instances
+total_warm = sum(pool['size'] for pool in pools)
+print(f"Total warm instances: {total_warm}")
+
+# List pool details
+for pool in pools:
+
+	print(f"  Pool {pool['id']}: runner_set={pool['runner_set_id']}, size={pool['size']}")
+
+```
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListRunnerPoolsRequest
+*/
+func (a *V1RunnersAPIService) ListRunnerPools(ctx context.Context) ApiListRunnerPoolsRequest {
+	return ApiListRunnerPoolsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return CommonsPoolListOutput
+func (a *V1RunnersAPIService) ListRunnerPoolsExecute(r ApiListRunnerPoolsRequest) (*CommonsPoolListOutput, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CommonsPoolListOutput
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "V1RunnersAPIService.ListRunnerPools")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/runner_pool"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.runnerSetId == nil {
+		return localVarReturnValue, nil, reportError("runnerSetId is required and must be specified")
+	}
+
+	parameterAddToHeaderOrQuery(localVarQueryParams, "runner_set_id", r.runnerSetId, "")
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		var v WarpBuildAPIError
+		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+		if err != nil {
+			newErr.error = err.Error()
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+		newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 

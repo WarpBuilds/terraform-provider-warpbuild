@@ -23,9 +23,10 @@ import (
 )
 
 var (
-	_ resource.Resource                = &runnerResource{}
-	_ resource.ResourceWithConfigure   = &runnerResource{}
-	_ resource.ResourceWithImportState = &runnerResource{}
+	_ resource.Resource                   = &runnerResource{}
+	_ resource.ResourceWithConfigure      = &runnerResource{}
+	_ resource.ResourceWithImportState    = &runnerResource{}
+	_ resource.ResourceWithValidateConfig = &runnerResource{}
 )
 
 type runnerResource struct {
@@ -119,8 +120,9 @@ func (r *runnerResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				},
 			},
 			"pool_size": schema.Int64Attribute{
-				MarkdownDescription: "Number of warm pool instances.",
-				Required:            true,
+				MarkdownDescription: "Number of warm pool instances. Warm pools apply to " +
+					"`ondemand` runners only.",
+				Required: true,
 			},
 			"labels": schema.SetAttribute{
 				MarkdownDescription: "Labels used to select this runner in CI workflows. Defaults to the runner name.",
@@ -237,6 +239,35 @@ func (r *runnerResource) Configure(_ context.Context, req resource.ConfigureRequ
 	r.client = client
 }
 
+// ValidateConfig rejects warm pools on spot runners: the backend silently
+// skips pool creation for spot capacity, which would otherwise surface as
+// permanent drift (configured pool_size vs. an actual pool of 0).
+func (r *runnerResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var config runnerResourceModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	if config.PoolSize.IsNull() || config.PoolSize.IsUnknown() || config.PoolSize.ValueInt64() == 0 {
+		return
+	}
+	if config.Configuration.IsNull() || config.Configuration.IsUnknown() {
+		return
+	}
+	var cfg runnerConfigurationModel
+	resp.Diagnostics.Append(config.Configuration.As(ctx, &cfg, basetypes.ObjectAsOptions{})...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	if cfg.CapacityType.ValueString() == "spot" {
+		resp.Diagnostics.AddAttributeError(
+			path.Root("pool_size"),
+			"Warm pools are not supported for spot runners",
+			"Set pool_size = 0 or use capacity_type = \"ondemand\".",
+		)
+	}
+}
+
 func (r *runnerResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan runnerResourceModel
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
@@ -297,6 +328,14 @@ func (r *runnerResource) Read(ctx context.Context, req resource.ReadRequest, res
 	if resp.Diagnostics.HasError() {
 		return
 	}
+
+	poolSize, diags := r.readPoolSize(ctx, state.ID.ValueString())
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	state.PoolSize = types.Int64Value(poolSize)
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 
@@ -358,6 +397,27 @@ func (r *runnerResource) ImportState(ctx context.Context, req resource.ImportSta
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
 
+// readPoolSize sums the runner set's warm pool sizes via the pools API.
+// Runners without a pool report 0.
+func (r *runnerResource) readPoolSize(ctx context.Context, runnerID string) (int64, diag.Diagnostics) {
+	var diags diag.Diagnostics
+	out, httpResp, err := r.client.V1RunnersAPI.ListRunnerPools(ctx).RunnerSetId(runnerID).Execute()
+	if err != nil {
+		diags.AddError("Failed to read runner pool", apiError(httpResp, err))
+		return 0, diags
+	}
+	var total int64
+	if out != nil {
+		for _, pool := range out.Items {
+			if pool.Size != nil {
+				total += int64(*pool.Size)
+			}
+		}
+	}
+	return total, diags
+}
+
+
 func expandRunnerConfiguration(ctx context.Context, obj types.Object) (*wbclient.CommonsRunnerSetConfiguration, diag.Diagnostics) {
 	var diags diag.Diagnostics
 	var cfg runnerConfigurationModel
@@ -418,11 +478,6 @@ func (r *runnerResource) setState(ctx context.Context, m *runnerResourceModel, r
 	m.ID = types.StringPointerValue(runner.Id)
 	m.Name = types.StringPointerValue(runner.Name)
 	m.ProviderID = types.StringPointerValue(runner.ProviderId)
-	// pool_size is only returned by API versions that include the batched
-	// pool lookup; keep the planned/imported value when absent.
-	if runner.PoolSize != nil {
-		m.PoolSize = types.Int64Value(int64(*runner.PoolSize))
-	}
 
 	labels, d := types.SetValueFrom(ctx, types.StringType, runner.Labels)
 	diags.Append(d...)

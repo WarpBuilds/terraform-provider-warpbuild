@@ -34,8 +34,6 @@ type CommonsRunner struct {
 	Name *string `json:"name,omitempty"`
 	// OrganizationId is the owner organization
 	OrganizationId *string `json:"organization_id,omitempty"`
-	// PoolSize is the number of warm pool instances. Populated on the public GET /runners endpoints; 0 when the runner has no warm pool.
-	PoolSize *int32 `json:"pool_size,omitempty"`
 	// ProviderId is the stack ID the BYOC runner set provisions into
 	ProviderId *string `json:"provider_id,omitempty"`
 	// StockRunnerId references a stock runner template if applicable
@@ -322,38 +320,6 @@ func (o *CommonsRunner) SetOrganizationId(v string) {
 	o.OrganizationId = &v
 }
 
-// GetPoolSize returns the PoolSize field value if set, zero value otherwise.
-func (o *CommonsRunner) GetPoolSize() int32 {
-	if o == nil || IsNil(o.PoolSize) {
-		var ret int32
-		return ret
-	}
-	return *o.PoolSize
-}
-
-// GetPoolSizeOk returns a tuple with the PoolSize field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *CommonsRunner) GetPoolSizeOk() (*int32, bool) {
-	if o == nil || IsNil(o.PoolSize) {
-		return nil, false
-	}
-	return o.PoolSize, true
-}
-
-// HasPoolSize returns a boolean if a field has been set.
-func (o *CommonsRunner) HasPoolSize() bool {
-	if o != nil && !IsNil(o.PoolSize) {
-		return true
-	}
-
-	return false
-}
-
-// SetPoolSize gets a reference to the given int32 and assigns it to the PoolSize field.
-func (o *CommonsRunner) SetPoolSize(v int32) {
-	o.PoolSize = &v
-}
-
 // GetProviderId returns the ProviderId field value if set, zero value otherwise.
 func (o *CommonsRunner) GetProviderId() string {
 	if o == nil || IsNil(o.ProviderId) {
@@ -516,9 +482,6 @@ func (o CommonsRunner) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.OrganizationId) {
 		toSerialize["organization_id"] = o.OrganizationId
 	}
-	if !IsNil(o.PoolSize) {
-		toSerialize["pool_size"] = o.PoolSize
-	}
 	if !IsNil(o.ProviderId) {
 		toSerialize["provider_id"] = o.ProviderId
 	}
@@ -561,7 +524,6 @@ func (o *CommonsRunner) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "meta")
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "organization_id")
-		delete(additionalProperties, "pool_size")
 		delete(additionalProperties, "provider_id")
 		delete(additionalProperties, "stock_runner_id")
 		delete(additionalProperties, "updated_at")
