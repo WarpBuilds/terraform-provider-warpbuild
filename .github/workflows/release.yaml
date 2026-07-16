@@ -1,0 +1,46 @@
+name: Release
+
+# Builds, signs and publishes provider binaries when a version tag is pushed.
+# The Terraform Registry consumes the GitHub release artifacts (zips,
+# SHA256SUMS, signature, manifest).
+#
+# Required repo secrets:
+#   GPG_PRIVATE_KEY  ASCII-armored private key registered with the registry
+#   GPG_PASSPHRASE   its passphrase (empty string if none)
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: warp-ubuntu-latest-x64-4x
+    steps:
+      - uses: WarpBuilds/checkout@v7
+        with:
+          # goreleaser needs the full history to resolve the previous tag
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: "~> v2"
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
