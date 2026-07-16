@@ -378,6 +378,54 @@
         "x-stability": "alpha"
       }
     },
+    "/runner_pool": {
+      "get": {
+        "security": [
+          {
+            "JWTKeyAuth": []
+          },
+          {
+            "APIKeyAuth": []
+          }
+        ],
+        "description": "Lists all runner pools for the authenticated organization. Runner pools allow you to configure warm pools of pre-provisioned runner instances for faster job startup times.\n\nA pool maintains a specified number of idle runner instances ready to be allocated immediately when a job is queued.\n\n## Code Examples\n\n### Shell (curl)\n\n```bash\ncurl -X GET \"https://api.warpbuild.com/api/v1/runner_pool\" \\\n     -H \"Authorization: Bearer <your-api-key>\" \\\n     -H \"Content-Type: application/json\"\n```\n\n### Example Response\n\n```json\n{\n  \"items\": [\n    {\n      \"id\": \"w7ifgep3raad86r0\",\n      \"created_at\": \"2024-11-11T05:26:58.235252Z\",\n      \"updated_at\": \"2024-11-11T05:41:13.474687Z\",\n      \"runner_set_id\": \"wy3i9dbgh94op3gt\",\n      \"provider\": null,\n      \"size\": 0\n    },\n    {\n      \"id\": \"wd2pxg6lr8b34sw7\",\n      \"created_at\": \"2024-11-11T04:58:16.109951Z\",\n      \"updated_at\": \"2024-11-14T03:51:07.442081Z\",\n      \"runner_set_id\": \"w52c7ixv0wdfkk8p\",\n      \"provider\": null,\n      \"size\": 0\n    },\n    {\n      \"id\": \"wux7zvuiqh5qcga3\",\n      \"created_at\": \"2025-11-12T11:04:23.193047Z\",\n      \"updated_at\": \"2025-11-12T11:04:23.193047Z\",\n      \"runner_set_id\": \"wmqael8cofj04f12\",\n      \"provider\": null,\n      \"size\": 2\n    }\n  ]\n}\n```\n\n### TypeScript\n\n```typescript\nconst response = await fetch(\n  'https://api.warpbuild.com/api/v1/runner_pool',\n  {\n    method: 'GET',\n    headers: {\n      'Authorization': 'Bearer <your-api-key>',\n      'Content-Type': 'application/json'\n    }\n  }\n);\nconst data = await response.json();\nconsole.log(`Found ${data.items.length} runner pools`);\n\n// Find pools with active instances\nconst activePools = data.items.filter(pool => pool.size > 0);\nconsole.log(`Pools with warm instances: ${activePools.length}`);\n\n// Total warm instances\nconst totalWarm = data.items.reduce((sum, pool) => sum + pool.size, 0);\nconsole.log(`Total warm instances: ${totalWarm}`);\n```\n\n### Python\n\n```python\nimport requests\n\nresponse = requests.get(\n    'https://api.warpbuild.com/api/v1/runner_pool',\n    headers={\n        'Authorization': 'Bearer <your-api-key>',\n        'Content-Type': 'application/json'\n    }\n)\ndata = response.json()\npools = data['items']\nprint(f\"Found {len(pools)} runner pools\")\n\n# Find pools with active instances\nactive_pools = [pool for pool in pools if pool['size'] > 0]\nprint(f\"Pools with warm instances: {len(active_pools)}\")\n\n# Total warm instances\ntotal_warm = sum(pool['size'] for pool in pools)\nprint(f\"Total warm instances: {total_warm}\")\n\n# List pool details\nfor pool in pools:\n    print(f\"  Pool {pool['id']}: runner_set={pool['runner_set_id']}, size={pool['size']}\")\n```\n",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "v1 Runners"
+        ],
+        "summary": "List runner pools",
+        "operationId": "ListRunnerPools",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "runner set id",
+            "name": "runner_set_id",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/commons.PoolListOutput"
+            }
+          },
+          "default": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/WarpBuildAPIError"
+            }
+          }
+        },
+        "x-stability": "alpha"
+      }
+    },
     "/runners": {
       "get": {
         "security": [
@@ -1014,9 +1062,6 @@
         "runner_image_pull_secret_id": {
           "type": "string"
         },
-        "settings": {
-          "$ref": "#/definitions/commons.RunnerImageSettings"
-        },
         "stack_id": {
           "description": "StackID is the infrastructure stack (kind + region, e.g. an EC2 stack)\nthe image belongs to. Required for byoc_ami; must be omitted for\ncontainer images.",
           "type": "string"
@@ -1197,6 +1242,17 @@
         },
         "vm_username": {
           "type": "string"
+        }
+      }
+    },
+    "commons.PoolListOutput": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/commons.RunnerPool"
+          }
         }
       }
     },
@@ -1400,7 +1456,7 @@
       "type": "object",
       "properties": {
         "purge_image_versions_offset": {
-          "description": "PurgeImageVersionsOffset is the number of versions to keep.\nEach time a new version is created, the oldest version is purged.\nAllowed values range [1, inf).\n\nDefault value is 2.",
+          "description": "PurgeImageVersionsOffset is the number of versions to keep.\nEach time a new version is created, the oldest version is purged.\nAllowed values range [1, inf).\n\nDefault value is 1.",
           "type": "integer"
         }
       }
@@ -1478,6 +1534,29 @@
       "properties": {
         "event": {},
         "parsed_event": {}
+      }
+    },
+    "commons.RunnerPool": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "runner_set_id": {
+          "type": "string"
+        },
+        "size": {
+          "type": "integer"
+        },
+        "updated_at": {
+          "type": "string"
+        }
       }
     },
     "commons.RunnerSetConfiguration": {
@@ -1726,9 +1805,6 @@
         },
         "runner_image_pull_secret_id": {
           "type": "string"
-        },
-        "settings": {
-          "$ref": "#/definitions/commons.RunnerImageSettings"
         },
         "warpbuild_snapshot_image": {
           "description": "WarpbuildSnapshotImage is the vm image used by warpbuild to run the jobs.\nThis will have the info for internal images managed by warpbuild when\ntype = 'warpbuild_managed'.\n\nIn case of container images, this will have the base image of the VM on\nwhich the container is run.",

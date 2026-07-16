@@ -23,6 +23,7 @@ docs/CommonsKubevirtConfigurations.md
 docs/CommonsListRunnerImagesOutput.md
 docs/CommonsNomadConfigurations.md
 docs/CommonsOrchardConfigurations.md
+docs/CommonsPoolListOutput.md
 docs/CommonsR2Configurations.md
 docs/CommonsRunner.md
 docs/CommonsRunnerImage.md
@@ -30,6 +31,7 @@ docs/CommonsRunnerImageHook.md
 docs/CommonsRunnerImageSettings.md
 docs/CommonsRunnerImageVersion.md
 docs/CommonsRunnerImageVersionMeta.md
+docs/CommonsRunnerPool.md
 docs/CommonsRunnerSetConfiguration.md
 docs/CommonsSetupRunnerInput.md
 docs/CommonsStack.md
@@ -60,6 +62,7 @@ model_commons_kubevirt_configurations.go
 model_commons_list_runner_images_output.go
 model_commons_nomad_configurations.go
 model_commons_orchard_configurations.go
+model_commons_pool_list_output.go
 model_commons_r2_configurations.go
 model_commons_runner.go
 model_commons_runner_image.go
@@ -67,6 +70,7 @@ model_commons_runner_image_hook.go
 model_commons_runner_image_settings.go
 model_commons_runner_image_version.go
 model_commons_runner_image_version_meta.go
+model_commons_runner_pool.go
 model_commons_runner_set_configuration.go
 model_commons_setup_runner_input.go
 model_commons_stack.go

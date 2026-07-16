@@ -86,6 +86,7 @@ Class | Method | HTTP request | Description
 *V1RunnerImagesAPI* | [**UpdateRunnerImage**](docs/V1RunnerImagesAPI.md#updaterunnerimage) | **Put** /runner-images/{id} | Update runner image details for the id.
 *V1RunnersAPI* | [**DeleteRunner**](docs/V1RunnersAPI.md#deleterunner) | **Delete** /runners/{id} | Delete a runner
 *V1RunnersAPI* | [**GetRunner**](docs/V1RunnersAPI.md#getrunner) | **Get** /runners/{id} | Get runner details
+*V1RunnersAPI* | [**ListRunnerPools**](docs/V1RunnersAPI.md#listrunnerpools) | **Get** /runner_pool | List runner pools
 *V1RunnersAPI* | [**ListRunners**](docs/V1RunnersAPI.md#listrunners) | **Get** /runners | List runners
 *V1RunnersAPI* | [**SetupRunner**](docs/V1RunnersAPI.md#setuprunner) | **Post** /runners | Create a new runner
 *V1RunnersAPI* | [**UpdateRunner**](docs/V1RunnersAPI.md#updaterunner) | **Patch** /runners/{id} | Update a runner
@@ -109,6 +110,7 @@ Class | Method | HTTP request | Description
  - [CommonsListRunnerImagesOutput](docs/CommonsListRunnerImagesOutput.md)
  - [CommonsNomadConfigurations](docs/CommonsNomadConfigurations.md)
  - [CommonsOrchardConfigurations](docs/CommonsOrchardConfigurations.md)
+ - [CommonsPoolListOutput](docs/CommonsPoolListOutput.md)
  - [CommonsR2Configurations](docs/CommonsR2Configurations.md)
  - [CommonsRunner](docs/CommonsRunner.md)
  - [CommonsRunnerImage](docs/CommonsRunnerImage.md)
@@ -116,6 +118,7 @@ Class | Method | HTTP request | Description
  - [CommonsRunnerImageSettings](docs/CommonsRunnerImageSettings.md)
  - [CommonsRunnerImageVersion](docs/CommonsRunnerImageVersion.md)
  - [CommonsRunnerImageVersionMeta](docs/CommonsRunnerImageVersionMeta.md)
+ - [CommonsRunnerPool](docs/CommonsRunnerPool.md)
  - [CommonsRunnerSetConfiguration](docs/CommonsRunnerSetConfiguration.md)
  - [CommonsSetupRunnerInput](docs/CommonsSetupRunnerInput.md)
  - [CommonsStack](docs/CommonsStack.md)

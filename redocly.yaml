@@ -19,3 +19,6 @@ apis:
           - GetRunner
           - UpdateRunner
           - DeleteRunner
+          # warm pools (read-only: pool_size writes go through the runner
+          # create/update endpoints; POST /runner_pool is admin-only)
+          - ListRunnerPools

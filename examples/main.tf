@@ -1,0 +1,62 @@
+terraform {
+  required_providers {
+    warpbuild = {
+      source = "warpbuilds/warpbuild"
+    }
+  }
+}
+
+# API key via WARPBUILD_API_KEY env var, or set api_key here.
+provider "warpbuild" {}
+
+# Look up the EC2 stack to deploy into.
+data "warpbuild_stack" "ec2" {
+  alias = "my-ec2-stack"
+}
+
+# A BYOC AMI runner image.
+resource "warpbuild_runner_image" "custom" {
+  alias    = "my-custom-image"
+  stack_id = data.warpbuild_stack.ec2.id
+  ami_id   = "ami-0123456789abcdef0"
+}
+
+# A custom runner set using the image.
+resource "warpbuild_runner" "custom" {
+  name        = "my-custom-runner"
+  provider_id = data.warpbuild_stack.ec2.id
+
+  # Warm pool instances kept ready for jobs. Only supported with
+  # capacity_type = "ondemand"; set to 0 to disable the warm pool.
+  pool_size = 1
+
+  configuration = {
+    capacity_type = "ondemand"
+    image         = warpbuild_runner_image.custom.id
+
+    byoc_sku = {
+      arch           = "x64"
+      instance_types = ["m5.xlarge", "m5.2xlarge"]
+      role_arn       = "arn:aws:iam::123456789012:role/WarpBuildRunnerRole"
+    }
+
+    storage = {
+      tier = "custom"
+      size = 256
+    }
+  }
+}
+
+# The labels to request this runner with in CI workflows, e.g.
+# `runs-on: my-custom-runner` in GitHub Actions.
+output "runner_labels" {
+  value = warpbuild_runner.custom.labels
+}
+
+output "runner_id" {
+  value = warpbuild_runner.custom.id
+}
+
+output "runner_image_id" {
+  value = warpbuild_runner_image.custom.id
+}

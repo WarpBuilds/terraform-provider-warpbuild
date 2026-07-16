@@ -20,7 +20,7 @@ var _ MappedNullable = &CommonsRunnerImageSettings{}
 
 // CommonsRunnerImageSettings struct for CommonsRunnerImageSettings
 type CommonsRunnerImageSettings struct {
-	// PurgeImageVersionsOffset is the number of versions to keep. Each time a new version is created, the oldest version is purged. Allowed values range [1, inf).  Default value is 2.
+	// PurgeImageVersionsOffset is the number of versions to keep. Each time a new version is created, the oldest version is purged. Allowed values range [1, inf).  Default value is 1.
 	PurgeImageVersionsOffset *int32 `json:"purge_image_versions_offset,omitempty"`
 	AdditionalProperties     map[string]interface{}
 }

@@ -25,7 +25,6 @@ type CommonsUpdateRunnerImageInput struct {
 	Hooks                   []CommonsRunnerImageHook           `json:"hooks,omitempty"`
 	Id                      *string                            `json:"id,omitempty"`
 	RunnerImagePullSecretId *string                            `json:"runner_image_pull_secret_id,omitempty"`
-	Settings                *CommonsRunnerImageSettings        `json:"settings,omitempty"`
 	WarpbuildSnapshotImage  *CommonsWarpbuildSnapshotImage     `json:"warpbuild_snapshot_image,omitempty"`
 	AdditionalProperties    map[string]interface{}
 }
@@ -209,38 +208,6 @@ func (o *CommonsUpdateRunnerImageInput) SetRunnerImagePullSecretId(v string) {
 	o.RunnerImagePullSecretId = &v
 }
 
-// GetSettings returns the Settings field value if set, zero value otherwise.
-func (o *CommonsUpdateRunnerImageInput) GetSettings() CommonsRunnerImageSettings {
-	if o == nil || IsNil(o.Settings) {
-		var ret CommonsRunnerImageSettings
-		return ret
-	}
-	return *o.Settings
-}
-
-// GetSettingsOk returns a tuple with the Settings field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *CommonsUpdateRunnerImageInput) GetSettingsOk() (*CommonsRunnerImageSettings, bool) {
-	if o == nil || IsNil(o.Settings) {
-		return nil, false
-	}
-	return o.Settings, true
-}
-
-// HasSettings returns a boolean if a field has been set.
-func (o *CommonsUpdateRunnerImageInput) HasSettings() bool {
-	if o != nil && !IsNil(o.Settings) {
-		return true
-	}
-
-	return false
-}
-
-// SetSettings gets a reference to the given CommonsRunnerImageSettings and assigns it to the Settings field.
-func (o *CommonsUpdateRunnerImageInput) SetSettings(v CommonsRunnerImageSettings) {
-	o.Settings = &v
-}
-
 // GetWarpbuildSnapshotImage returns the WarpbuildSnapshotImage field value if set, zero value otherwise.
 func (o *CommonsUpdateRunnerImageInput) GetWarpbuildSnapshotImage() CommonsWarpbuildSnapshotImage {
 	if o == nil || IsNil(o.WarpbuildSnapshotImage) {
@@ -298,9 +265,6 @@ func (o CommonsUpdateRunnerImageInput) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.RunnerImagePullSecretId) {
 		toSerialize["runner_image_pull_secret_id"] = o.RunnerImagePullSecretId
 	}
-	if !IsNil(o.Settings) {
-		toSerialize["settings"] = o.Settings
-	}
 	if !IsNil(o.WarpbuildSnapshotImage) {
 		toSerialize["warpbuild_snapshot_image"] = o.WarpbuildSnapshotImage
 	}
@@ -331,7 +295,6 @@ func (o *CommonsUpdateRunnerImageInput) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "hooks")
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "runner_image_pull_secret_id")
-		delete(additionalProperties, "settings")
 		delete(additionalProperties, "warpbuild_snapshot_image")
 		o.AdditionalProperties = additionalProperties
 	}
