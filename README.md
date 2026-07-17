@@ -70,8 +70,7 @@ backend-core's code-gen workflow.
 
 ### Testing
 
-Acceptance tests run against a real WarpBuild environment, post-merge on
-`main` (see `.github/workflows/acceptance-tests.yaml`). To run locally:
+Acceptance tests run against a real WarpBuild environment:
 
 ```sh
 export WARPBUILD_API_KEY=...           # test org API key
