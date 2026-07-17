@@ -1,0 +1,58 @@
+name: Release
+
+# Builds, signs and publishes provider binaries when a version tag is pushed.
+# The Terraform Registry consumes the GitHub release artifacts (zips,
+# SHA256SUMS, signature, manifest).
+#
+# Signing secrets (GPG_PRIVATE_KEY / GPG_PASSPHRASE) live in Infisical
+# (prod, /terraform-provider) and are fetched at run time using universal
+# auth; the INFISICAL_CLIENT_ID / INFISICAL_CLIENT_SECRET repo secrets hold
+# the machine credentials. Fork workflow runs require approval on this repo.
+# TODO: switch to an OIDC machine identity (no static credentials) once
+# available.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: warp-ubuntu-latest-x64-4x
+    steps:
+      - uses: WarpBuilds/checkout@v7
+        with:
+          # goreleaser needs the full history to resolve the previous tag
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Fetch signing key from Infisical
+        uses: Infisical/secrets-action@v1.0.9
+        with:
+          client-id: ${{ secrets.INFISICAL_CLIENT_ID }}
+          client-secret: ${{ secrets.INFISICAL_CLIENT_SECRET }}
+          project-slug: warp-build-n8bs
+          env-slug: prod
+          secret-path: /terraform-provider
+
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ env.GPG_PRIVATE_KEY }}
+          passphrase: ${{ env.GPG_PASSPHRASE }}
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: "~> v2"
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
