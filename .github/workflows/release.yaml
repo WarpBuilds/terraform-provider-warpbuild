@@ -4,9 +4,12 @@ name: Release
 # The Terraform Registry consumes the GitHub release artifacts (zips,
 # SHA256SUMS, signature, manifest).
 #
-# Required repo secrets:
+# Signing secrets live in the 'release' environment (canonical copies in
+# Infisical under /terraform-provider):
 #   GPG_PRIVATE_KEY  ASCII-armored private key registered with the registry
-#   GPG_PASSPHRASE   its passphrase (empty string if none)
+#   GPG_PASSPHRASE   its passphrase
+# Environment scoping means only this workflow, on a version tag, can read
+# them — an edited workflow on a branch cannot.
 
 on:
   push:
@@ -19,6 +22,7 @@ permissions:
 jobs:
   release:
     runs-on: warp-ubuntu-latest-x64-4x
+    environment: release
     steps:
       - uses: WarpBuilds/checkout@v7
         with:
