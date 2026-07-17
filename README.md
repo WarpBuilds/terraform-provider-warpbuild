@@ -4,6 +4,10 @@ Terraform provider for [WarpBuild](https://www.warpbuild.com)'s automation API:
 stacks, BYOC (AWS AMI) runner images, and custom runner sets. See the
 [automation API docs](https://www.warpbuild.com/docs/ci/api-keys/automation).
 
+> **Beta**: this provider is in beta. The schema may change between releases;
+> pin an exact version. Beta versions are prereleases, so version ranges like
+> `~> 0.1` will not match them — pin exactly as shown below.
+
 ## Usage
 
 ```hcl
@@ -11,7 +15,7 @@ terraform {
   required_providers {
     warpbuild = {
       source  = "warpbuilds/warpbuild"
-      version = "~> 0.1"
+      version = "0.2.0-beta"
     }
   }
 }
