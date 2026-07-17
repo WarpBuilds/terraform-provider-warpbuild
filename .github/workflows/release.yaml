@@ -4,12 +4,12 @@ name: Release
 # The Terraform Registry consumes the GitHub release artifacts (zips,
 # SHA256SUMS, signature, manifest).
 #
-# Signing secrets live in the 'release' environment (canonical copies in
-# Infisical under /terraform-provider):
-#   GPG_PRIVATE_KEY  ASCII-armored private key registered with the registry
-#   GPG_PASSPHRASE   its passphrase
-# Environment scoping means only this workflow, on a version tag, can read
-# them — an edited workflow on a branch cannot.
+# Signing secrets (GPG_PRIVATE_KEY / GPG_PASSPHRASE) live ONLY in Infisical
+# (prod, /terraform-provider) and are fetched at run time via an OIDC machine
+# identity. The identity's OIDC claims are bound to this repo's version-tag
+# refs, so no other repo, branch, or workflow can read them; there are no
+# GitHub-side copies. Identity ID comes from the INFISICAL_RELEASE_IDENTITY_ID
+# repo variable.
 
 on:
   push:
@@ -18,11 +18,11 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
   release:
     runs-on: warp-ubuntu-latest-x64-4x
-    environment: release
     steps:
       - uses: WarpBuilds/checkout@v7
         with:
@@ -33,12 +33,21 @@ jobs:
         with:
           go-version-file: go.mod
 
+      - name: Fetch signing key from Infisical
+        uses: Infisical/secrets-action@v1.0.9
+        with:
+          method: oidc
+          identity-id: ${{ vars.INFISICAL_RELEASE_IDENTITY_ID }}
+          project-slug: warp-build-n8bs
+          env-slug: prod
+          secret-path: /terraform-provider
+
       - name: Import GPG key
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v6
         with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          gpg_private_key: ${{ env.GPG_PRIVATE_KEY }}
+          passphrase: ${{ env.GPG_PASSPHRASE }}
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
