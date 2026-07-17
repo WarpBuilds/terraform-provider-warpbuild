@@ -4,12 +4,12 @@ name: Release
 # The Terraform Registry consumes the GitHub release artifacts (zips,
 # SHA256SUMS, signature, manifest).
 #
-# Signing secrets (GPG_PRIVATE_KEY / GPG_PASSPHRASE) live ONLY in Infisical
-# (prod, /terraform-provider) and are fetched at run time via an OIDC machine
-# identity. The identity's OIDC claims are bound to this repo's version-tag
-# refs, so no other repo, branch, or workflow can read them; there are no
-# GitHub-side copies. Identity ID comes from the INFISICAL_RELEASE_IDENTITY_ID
-# repo variable.
+# Signing secrets (GPG_PRIVATE_KEY / GPG_PASSPHRASE) live in Infisical
+# (prod, /terraform-provider) and are fetched at run time using universal
+# auth; the INFISICAL_CLIENT_ID / INFISICAL_CLIENT_SECRET repo secrets hold
+# the machine credentials. Fork workflow runs require approval on this repo.
+# TODO: switch to an OIDC machine identity (no static credentials) once
+# available.
 
 on:
   push:
@@ -18,7 +18,6 @@ on:
 
 permissions:
   contents: write
-  id-token: write
 
 jobs:
   release:
@@ -36,8 +35,8 @@ jobs:
       - name: Fetch signing key from Infisical
         uses: Infisical/secrets-action@v1.0.9
         with:
-          method: oidc
-          identity-id: ${{ vars.INFISICAL_RELEASE_IDENTITY_ID }}
+          client-id: ${{ secrets.INFISICAL_CLIENT_ID }}
+          client-secret: ${{ secrets.INFISICAL_CLIENT_SECRET }}
           project-slug: warp-build-n8bs
           env-slug: prod
           secret-path: /terraform-provider
