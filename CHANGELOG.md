@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.2.2-beta (2026-09-22)
+
+### Fixed
+
+- `warpbuild_runner` - setting `labels` no longer fails the apply with
+  "Provider produced inconsistent result after apply".
+  Support `labels = ["dependabot", "code-scanning"]` - the
+  Allow Dependabot and Allow CodeQL checkboxes in the UI
+
+### Changed
+
+- Updated example runner to carry the `warp-custom-` prefix the API requires.
+
+### Notes
+
+- The API lowercases labels and appends the runner name, so the set stored in
+  state is what you configured, not what the API returns. A runner answers to
+  its own name whether or not it is listed in `labels`.
+- Removing the `labels` attribute from a resource that had it is a no-op, not a
+  reset - the previous value is retained. Use `labels = []` to clear it.
+- An imported runner carries the runner name as a label, so the first plan
+  after `terraform import` shows one reconciling change to `labels`.
+
 ## 0.1.0 (2026-07-17)
 
 Initial release.

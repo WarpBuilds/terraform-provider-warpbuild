@@ -125,10 +125,12 @@ func (r *runnerResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				Required: true,
 			},
 			"labels": schema.SetAttribute{
-				MarkdownDescription: "Labels used to select this runner in CI workflows. Defaults to the runner name.",
-				ElementType:         types.StringType,
-				Optional:            true,
-				Computed:            true,
+				MarkdownDescription: "Labels used to select this runner in CI workflows. Defaults to the " +
+					"runner name when omitted. Add `dependabot` to run " +
+					"Dependabot update workflows on this runner and `code-scanning` to run CodeQL",
+				ElementType: types.StringType,
+				Optional:    true,
+				Computed:    true,
 				PlanModifiers: []planmodifier.Set{
 					setplanmodifier.UseStateForUnknown(),
 				},
@@ -478,7 +480,7 @@ func (r *runnerResource) setState(ctx context.Context, m *runnerResourceModel, r
 	m.Name = types.StringPointerValue(runner.Name)
 	m.ProviderID = types.StringPointerValue(runner.ProviderId)
 
-	labels, d := types.SetValueFrom(ctx, types.StringType, runner.Labels)
+	labels, d := reconcileLabels(ctx, m.Labels, runner.Labels, m.Name.ValueString())
 	diags.Append(d...)
 	m.Labels = labels
 

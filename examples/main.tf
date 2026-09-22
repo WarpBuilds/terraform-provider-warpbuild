@@ -23,7 +23,7 @@ resource "warpbuild_runner_image" "custom" {
 
 # A custom runner set using the image.
 resource "warpbuild_runner" "custom" {
-  name        = "my-custom-runner"
+  name        = "warp-custom-my-runner"
   provider_id = data.warpbuild_stack.ec2.id
 
   # Warm pool instances kept ready for jobs. Only supported with
@@ -48,7 +48,7 @@ resource "warpbuild_runner" "custom" {
 }
 
 # The labels to request this runner with in CI workflows, e.g.
-# `runs-on: my-custom-runner` in GitHub Actions.
+# `runs-on: warp-custom-my-runner` in GitHub Actions.
 output "runner_labels" {
   value = warpbuild_runner.custom.labels
 }

@@ -15,7 +15,7 @@ terraform {
   required_providers {
     warpbuild = {
       source  = "warpbuilds/warpbuild"
-      version = "0.2.0-beta"
+      version = "0.2.2-beta"
     }
   }
 }
@@ -34,7 +34,7 @@ resource "warpbuild_runner_image" "custom" {
 }
 
 resource "warpbuild_runner" "custom" {
-  name        = "my-custom-runner"
+  name        = "warp-custom-my-runner"
   provider_id = data.warpbuild_stack.ec2.id
   pool_size   = 1
 
@@ -49,7 +49,7 @@ resource "warpbuild_runner" "custom" {
 }
 ```
 
-Use the runner's labels in your workflows (e.g. `runs-on: my-custom-runner`).
+Use the runner's labels in your workflows (e.g. `runs-on: warp-custom-my-runner`).
 Full documentation for every resource and data source lives in
 [`docs/`](docs/) and on the Terraform Registry.
 
