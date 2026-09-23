@@ -3,11 +3,13 @@ data "warpbuild_stack" "ec2" {
 }
 
 resource "warpbuild_runner" "custom" {
-  name        = "my-custom-runner"
+  name        = "warp-custom-my-runner"
   provider_id = data.warpbuild_stack.ec2.id
 
   # Warm pool instances kept ready for jobs; ondemand runners only.
   pool_size = 1
+
+  labels = ["dependabot", "code-scanning"]
 
   configuration = {
     image = warpbuild_runner_image.custom.id

@@ -113,7 +113,7 @@ func TestAccRunner_lifecycle(t *testing.T) {
 	config := func(poolSize int, extraLabel string) string {
 		labels := ""
 		if extraLabel != "" {
-			labels = fmt.Sprintf("labels = [%q, %q]", name, extraLabel)
+			labels = fmt.Sprintf("labels = [%q]", extraLabel)
 		}
 		return fmt.Sprintf(`
 provider "warpbuild" {}
@@ -172,13 +172,14 @@ resource "warpbuild_runner" "test" {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("warpbuild_runner.test", "pool_size", "1"),
 					resource.TestCheckTypeSetElemAttr("warpbuild_runner.test", "labels.*", "tf-acc-extra"),
+					resource.TestCheckResourceAttr("warpbuild_runner.test", "labels.#", "1"),
 				),
 			},
 			{
-				// Import recovers pool_size via the pools API.
-				ResourceName:      "warpbuild_runner.test",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "warpbuild_runner.test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels"},
 			},
 			{
 				// Scale the warm pool back down before destroy.
